@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="6.0.3"/>
     <PackageReference Include="Neolution.CodeAnalysis" Version="2.5.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Neolution.Extensions.Identity.Abstractions\Neolution.Extensions.Identity.Abstractions.csproj" />
+    <ProjectReference Include="..\Neolution.Extensions.Identity.Abstractions\Neolution.Extensions.Identity.Abstractions.csproj"/>
   </ItemGroup>
 
 </Project>
