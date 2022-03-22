@@ -32,12 +32,14 @@ jobs:
           dotnet build --configuration '${{ env.BUILD_CONFIGURATION }}'
           dotnet test --configuration '${{ env.BUILD_CONFIGURATION }}'
 
-  az-artifacts-build-and-deploy:
+  nuget-build-and-deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
       # Checkout the repo
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2      
+        with:
+          fetch-depth: 0 # Needed for GitVersion to function correctly
 
       # Setup .NET Core SDK
       - name: Setup .NET Core
@@ -48,19 +50,25 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY_NEOLUTION }}
       
-      # Calculate date and time for version number
-      - name: Calculate version number
-        id: versionNumber
-        uses: lee-dohm/calculate-dates-and-times@v1.0.2
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
         with:
-          format: "YYYY.M.DHHmm"      
+          versionSpec: '5.x'
+          
+      - name: Determine Version
+        uses: gittools/actions/gitversion/execute@v0.9.7  
+
+      - name: Delete project reference to Abstractions
+        uses: Mudlet/xmlstarlet-action@v1.1
+        with:
+          args: ed -P -L --delete //ItemGroup/ProjectReference Neolution.Extensions.Identity/Neolution.Extensions.Identity.csproj
 
       # Run dotnet build and package
       - name: dotnet build and publish
         run: |
           dotnet restore
           dotnet build --configuration '${{ env.BUILD_CONFIGURATION }}'
-          dotnet pack -c '${{ env.BUILD_CONFIGURATION }}' -p:PackageVersion=${{ steps.versionNumber.outputs.date }}
+          dotnet pack -c '${{ env.BUILD_CONFIGURATION }}' -p:PackageVersion=$GITVERSION_NUGETVERSION
 
       # Publish the package to Nuget.org
       #- name: "dotnet publish"
