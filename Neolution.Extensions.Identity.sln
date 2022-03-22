@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32228.430
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neolution.Extensions.Identity", "Neolution.Extensions.Identity\Neolution.Extensions.Identity.csproj", "{416FC53A-45D1-4268-ACD7-EDBD2609BB1A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neolution.Extensions.Identity.Abstractions", "Neolution.Extensions.Identity.Abstractions\Neolution.Extensions.Identity.Abstractions.csproj", "{59A98FC4-29B0-41B2-AA41-1B59449050DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{416FC53A-45D1-4268-ACD7-EDBD2609BB1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{416FC53A-45D1-4268-ACD7-EDBD2609BB1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{416FC53A-45D1-4268-ACD7-EDBD2609BB1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{416FC53A-45D1-4268-ACD7-EDBD2609BB1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59A98FC4-29B0-41B2-AA41-1B59449050DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59A98FC4-29B0-41B2-AA41-1B59449050DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59A98FC4-29B0-41B2-AA41-1B59449050DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59A98FC4-29B0-41B2-AA41-1B59449050DC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B539E9A6-1C38-4B4E-9DFD-43AD161693E5}
+	EndGlobalSection
+EndGlobal
