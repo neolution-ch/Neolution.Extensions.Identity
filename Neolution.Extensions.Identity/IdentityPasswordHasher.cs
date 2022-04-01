@@ -1,14 +1,13 @@
-﻿namespace Neolution.Extensions.Identity.Security
+﻿namespace Neolution.Extensions.Identity
 {
     using Microsoft.AspNetCore.Identity;
     using Neolution.Abstractions.Security;
 
     /// <summary>
-    /// Password hashing implementation für das ASP.NET Core Identity framework
+    /// Password hashing implementation for the ASP.NET Core Identity framework
     /// </summary>
-    /// <typeparam name="TUser">The application user type.</typeparam>
-    public class IdentityPasswordHasher<TUser> : IPasswordHasher<TUser>
-        where TUser : class
+    public class IdentityPasswordHasher<TUserAccount> : IPasswordHasher<TUserAccount> 
+        where TUserAccount : IdentityUser<Guid>
     {
         /// <summary>
         /// The password hasher
@@ -16,22 +15,22 @@
         private readonly IPasswordHasher passwordHasher;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IdentityPasswordHasher{TUser}"/> class.
+        /// Initializes a new instance of the <see cref="IdentityPasswordHasher{TUserAccount}"/> class.
         /// </summary>
-        /// <param name="passwordHasher">The password provider.</param>
+        /// <param name="passwordHasher">The password hasher.</param>
         public IdentityPasswordHasher(IPasswordHasher passwordHasher)
         {
             this.passwordHasher = passwordHasher;
         }
 
         /// <inheritdoc />
-        public string HashPassword(TUser user, string password)
+        public string HashPassword(TUserAccount user, string password)
         {
             return this.passwordHasher.CreateHash(password);
         }
 
         /// <inheritdoc />
-        public PasswordVerificationResult VerifyHashedPassword(TUser user, string hashedPassword, string providedPassword)
+        public PasswordVerificationResult VerifyHashedPassword(TUserAccount user, string hashedPassword, string providedPassword)
         {
             if (this.passwordHasher.VerifyHash(hashedPassword, providedPassword))
             {
