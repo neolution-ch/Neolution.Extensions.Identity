@@ -1,12 +1,10 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System.IdentityModel.Tokens.Jwt;
     using Microsoft.AspNetCore.Identity;
-    using Neolution.Abstractions.Security;
+    using Microsoft.EntityFrameworkCore;
     using Neolution.Extensions.Identity;
-    using Neolution.Extensions.Identity.Abstractions.Models;
-    using Neolution.Extensions.Identity.Abstractions.Services;
-    using Neolution.Extensions.Identity.Security;
-    using Neolution.Extensions.Identity.Stores;
+    using Neolution.Extensions.Identity.Abstractions;
 
     /// <summary>
     /// Extension methods for services working with ASP.NET Core Identity.
@@ -16,27 +14,33 @@
         /// <summary>
         /// Adds the identity services.
         /// </summary>
-        /// <typeparam name="TUser">The type of the user.</typeparam>
-        /// <typeparam name="TRole">The type of the role.</typeparam>
-        /// <typeparam name="TClaimType">The type of the claim type.</typeparam>
         /// <param name="services">The services.</param>
-        public static void AddNeolutionIdentity<TUser, TRole, TClaimType>(this IServiceCollection services)
-            where TUser : ApplicationUser
-            where TRole : ApplicationRole
-            where TClaimType : Enum
+        public static void AddNeolutionIdentity<TDbContext, TUserAccount>(this IServiceCollection services)
+            where TDbContext : DbContext
+            where TUserAccount : IdentityUser<Guid>
         {
-            // Use Identity Framework but with a custom User and Role store instead of Entity Framework
-            services.AddIdentity<TUser, TRole>()
-                .AddUserStore<UserStore<TUser, TClaimType>>()
-                .AddRoleStore<RoleStore>()
-                .AddDefaultTokenProviders();
+            services.AddIdentityCore<TUserAccount>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                })
+                .AddEntityFrameworkStores<TDbContext>();
 
-            // Register UserManager and SignInManager facades
-            services.AddScoped<IUserManager<TUser>, UserManagerFacade<TUser>>();
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            });
 
-            // Configure password hashing
-            services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
-            services.AddSingleton<IPasswordHasher<TUser>, IdentityPasswordHasher<TUser>>();
+            services.AddScoped(p => p.GetRequiredService<IDbContextFactory<TDbContext>>().CreateDbContextAsync());
+            services.AddSingleton<IPasswordHasher<TUserAccount>, IdentityPasswordHasher<TUserAccount>>();
+            services.AddScoped<IUserManager<TUserAccount>, UserManagerFacade<TUserAccount>>();
+
+            // By default, Microsoft has some legacy claim mapping that converts
+            // standard JWT claims into proprietary ones. This removes those mappings.
+            // https://github.com/aspnet/Security/issues/1043
+            // https://github.com/dotnet/aspnetcore/issues/4660
+            // https://mderriey.com/2019/06/23/where-are-my-jwt-claims/
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
         }
     }
 }

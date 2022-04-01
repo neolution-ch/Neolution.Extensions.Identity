@@ -58,10 +58,10 @@ jobs:
       - name: Determine Version
         uses: gittools/actions/gitversion/execute@v0.9.7  
 
-      - name: Delete project reference to Abstractions
-        uses: Mudlet/xmlstarlet-action@v1.1
-        with:
-          args: ed -P -L --delete //ItemGroup/ProjectReference Neolution.Extensions.Identity/Neolution.Extensions.Identity.csproj
+      #- name: Delete project reference to Abstractions
+      #  uses: Mudlet/xmlstarlet-action@v1.1
+      #  with:
+      #    args: ed -P -L --delete //ItemGroup/ProjectReference Neolution.Extensions.Identity/Neolution.Extensions.Identity.csproj
 
       # Run dotnet build and package
       - name: dotnet build and publish
