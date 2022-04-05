@@ -69,6 +69,8 @@
         /// <inheritdoc />
         public async Task<bool> CheckPasswordAsync(TUser user, string password) => await this.manager.CheckPasswordAsync(user, password).ConfigureAwait(false);
 
+        public async Task<IdentityResult> ChangePasswordAsync(TUser user, string currentPassword, string newPassword) => await this.manager.ChangePasswordAsync(user, currentPassword, newPassword).ConfigureAwait(false);
+
         /// <inheritdoc />
         public async Task<IdentityResult> AddClaimAsync(TUser user, Claim claim) => await this.manager.AddClaimAsync(user, claim).ConfigureAwait(false);
 

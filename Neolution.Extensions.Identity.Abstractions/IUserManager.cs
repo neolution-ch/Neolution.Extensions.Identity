@@ -8,9 +8,9 @@
     /// <summary>
     /// Provides the APIs for managing user in a persistence store.
     /// </summary>
-    /// <typeparam name="TUserAccount">The type of the user account.</typeparam>
-    public interface IUserManager<TUserAccount>
-        where TUserAccount : IdentityUser<Guid>
+    /// <typeparam name="TUser">The type of the user account.</typeparam>
+    public interface IUserManager<TUser>
+        where TUser : IdentityUser<Guid>
     {
         /// <summary>
         /// Creates the specified <paramref name="user"/> in the backing store with no password,
@@ -21,7 +21,7 @@
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
         /// of the operation.
         /// </returns>
-        Task<IdentityResult> CreateAsync(TUserAccount user);
+        Task<IdentityResult> CreateAsync(TUser user);
 
         /// <summary>
         /// Creates the specified <paramref name="user"/> in the backing store with given password,
@@ -33,7 +33,7 @@
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
         /// of the operation.
         /// </returns>
-        Task<IdentityResult> CreateAsync(TUserAccount user, string password);
+        Task<IdentityResult> CreateAsync(TUser user, string password);
 
         /// <summary>
         /// Updates the specified <paramref name="user"/> in the backing store.
@@ -43,7 +43,7 @@
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
         /// of the operation.
         /// </returns>
-        Task<IdentityResult> UpdateAsync(TUserAccount user);
+        Task<IdentityResult> UpdateAsync(TUser user);
 
         /// <summary>
         /// Deletes the specified <paramref name="user"/> from the backing store.
@@ -53,7 +53,7 @@
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
         /// of the operation.
         /// </returns>
-        Task<IdentityResult> DeleteAsync(TUserAccount user);
+        Task<IdentityResult> DeleteAsync(TUser user);
 
         /// <summary>
         /// Finds and returns a user, if any, who has the specified <paramref name="userId"/>.
@@ -62,7 +62,7 @@
         /// <returns>
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the user matching the specified <paramref name="userId"/> if it exists.
         /// </returns>
-        Task<TUserAccount?> FindByIdAsync(Guid userId);
+        Task<TUser?> FindByIdAsync(Guid userId);
 
         /// <summary>
         /// Finds and returns a user, if any, who has the specified user name.
@@ -71,7 +71,7 @@
         /// <returns>
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the user matching the specified <paramref name="userName"/> if it exists.
         /// </returns>
-        Task<TUserAccount?> FindByNameAsync(string userName);
+        Task<TUser?> FindByNameAsync(string userName);
 
         /// <summary>
         /// Returns a flag indicating whether the given <paramref name="password"/> is valid for the
@@ -82,7 +82,20 @@
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing true if
         /// the specified <paramref name="password" /> matches the one store for the <paramref name="user"/>,
         /// otherwise false.</returns>
-        Task<bool> CheckPasswordAsync(TUserAccount user, string password);
+        Task<bool> CheckPasswordAsync(TUser user, string password);
+
+        /// <summary>
+        /// Changes a user's password after confirming the specified <paramref name="currentPassword"/> is correct,
+        /// as an asynchronous operation.
+        /// </summary>
+        /// <param name="user">The user whose password should be set.</param>
+        /// <param name="currentPassword">The current password to validate before changing.</param>
+        /// <param name="newPassword">The new password to set for the specified <paramref name="user"/>.</param>
+        /// <returns>
+        /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
+        /// of the operation.
+        /// </returns>
+        Task<IdentityResult> ChangePasswordAsync(TUser user, string currentPassword, string newPassword);
 
         /// <summary>
         /// Adds the specified <paramref name="claim"/> to the <paramref name="user"/>.
@@ -93,7 +106,7 @@
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
         /// of the operation.
         /// </returns>
-        Task<IdentityResult> AddClaimAsync(TUserAccount user, Claim claim);
+        Task<IdentityResult> AddClaimAsync(TUser user, Claim claim);
 
         /// <summary>
         /// Adds the specified <paramref name="claims"/> to the <paramref name="user"/>.
@@ -104,7 +117,7 @@
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
         /// of the operation.
         /// </returns>
-        Task<IdentityResult> AddClaimsAsync(TUserAccount user, IEnumerable<Claim> claims);
+        Task<IdentityResult> AddClaimsAsync(TUser user, IEnumerable<Claim> claims);
 
         /// <summary>
         /// Replaces the given <paramref name="claim"/> on the specified <paramref name="user"/> with the <paramref name="newClaim"/>
@@ -116,7 +129,7 @@
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
         /// of the operation.
         /// </returns>
-        Task<IdentityResult> ReplaceClaimAsync(TUserAccount user, Claim claim, Claim newClaim);
+        Task<IdentityResult> ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim);
 
         /// <summary>
         /// Removes the specified <paramref name="claim"/> from the given <paramref name="user"/>.
@@ -127,7 +140,7 @@
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
         /// of the operation.
         /// </returns>
-        Task<IdentityResult> RemoveClaimAsync(TUserAccount user, Claim claim);
+        Task<IdentityResult> RemoveClaimAsync(TUser user, Claim claim);
 
         /// <summary>
         /// Removes the specified <paramref name="claims"/> from the given <paramref name="user"/>.
@@ -138,7 +151,7 @@
         /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
         /// of the operation.
         /// </returns>
-        Task<IdentityResult> RemoveClaimsAsync(TUserAccount user, IEnumerable<Claim> claims);
+        Task<IdentityResult> RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims);
 
         /// <summary>
         /// Gets a list of <see cref="Claim"/>s to be belonging to the specified <paramref name="user"/> as an asynchronous operation.
@@ -147,7 +160,7 @@
         /// <returns>
         /// A <see cref="Task{TResult}"/> that represents the result of the asynchronous query, a list of <see cref="Claim"/>s.
         /// </returns>
-        Task<IList<Claim>> GetClaimsAsync(TUserAccount user);
+        Task<IList<Claim>> GetClaimsAsync(TUser user);
 
         /// <summary>
         /// Gets the user, if any, associated with the normalized value of the specified email address.
@@ -158,6 +171,6 @@
         /// <returns>
         /// The task object containing the results of the asynchronous lookup operation, the user, if any, associated with a normalized value of the specified email address.
         /// </returns>
-        Task<TUserAccount?> FindByEmailAsync(string email);
+        Task<TUser?> FindByEmailAsync(string email);
     }
 }
