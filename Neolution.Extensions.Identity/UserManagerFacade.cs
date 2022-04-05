@@ -1,6 +1,7 @@
 ﻿namespace Neolution.Extensions.Identity
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Identity;
@@ -8,10 +9,17 @@
     using Neolution.Extensions.Identity.Abstractions;
 
     /// <inheritdoc />
-    internal class UserManagerFacade<TUser> : IUserManager<TUser>
+    public class UserManagerFacade<TUser> : IUserManager<TUser>
         where TUser : IdentityUser<Guid>
     {
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<UserManagerFacade<TUser>> logger;
+
+        /// <summary>
+        /// The manager
+        /// </summary>
         private readonly UserManager<TUser> manager;
 
         /// <summary>
@@ -49,10 +57,11 @@
             return result;
         }
 
-        public async Task<IdentityResult> DeleteAsync(TUser user) => await this.manager.DeleteAsync(user);
+        /// <inheritdoc />
+        public async Task<IdentityResult> DeleteAsync(TUser user) => await this.manager.DeleteAsync(user).ConfigureAwait(false);
 
         /// <inheritdoc />
-        public async Task<TUser?> FindByIdAsync(Guid userId) => await this.manager.FindByIdAsync(userId.ToString("D")).ConfigureAwait(false);
+        public async Task<TUser?> FindByIdAsync(Guid userId) => await this.manager.FindByIdAsync(userId.ToString("D", CultureInfo.InvariantCulture)).ConfigureAwait(false);
 
         /// <inheritdoc />
         public async Task<TUser?> FindByNameAsync(string userName) => await this.manager.FindByNameAsync(userName).ConfigureAwait(false);

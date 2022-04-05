@@ -6,7 +6,9 @@
     /// <summary>
     /// Password hashing implementation for the ASP.NET Core Identity framework
     /// </summary>
-    public class IdentityPasswordHasher<TUserAccount> : IPasswordHasher<TUserAccount> 
+    /// <typeparam name="TUserAccount">The type of the user account.</typeparam>
+    /// <seealso cref="IPasswordHasher{TUserAccount}" />
+    public class IdentityPasswordHasher<TUserAccount> : IPasswordHasher<TUserAccount>
         where TUserAccount : IdentityUser<Guid>
     {
         /// <summary>
