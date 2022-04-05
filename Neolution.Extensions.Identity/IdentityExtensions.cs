@@ -29,8 +29,7 @@
             {
                 options.User.RequireUniqueEmail = true;
             });
-
-            services.AddScoped(p => p.GetRequiredService<IDbContextFactory<TDbContext>>().CreateDbContextAsync());
+            
             services.AddSingleton<IPasswordHasher<TUserAccount>, IdentityPasswordHasher<TUserAccount>>();
             services.AddScoped<IUserManager<TUserAccount>, UserManagerFacade<TUserAccount>>();
 
