@@ -91,13 +91,25 @@
             var result = await this.manager.AddClaimsAsync(user, claimsToAdd).ConfigureAwait(false);
             if (result.Succeeded)
             {
+                if (this.logger.IsEnabled(LogLevel.Trace))
+                {
+                    this.logger.LogTrace("Adding claims succeeded for user id={id}", user.Id);
+                }
+
                 return result;
             }
 
-            this.logger.LogWarning("Could not add claims for user with id={id}", user.Id);
-            foreach (var error in result.Errors)
+            if (this.logger.IsEnabled(LogLevel.Warning))
             {
-                this.logger.LogDebug("Error: Code '{code}', Description: {description}", error.Code, error.Description);
+                this.logger.LogWarning("Could not add claims for user with id={id}", user.Id);
+            }
+
+            if (this.logger.IsEnabled(LogLevel.Debug))
+            {
+                foreach (var error in result.Errors)
+                {
+                    this.logger.LogDebug("Error: Code '{code}', Description: {description}", error.Code, error.Description);
+                }
             }
 
             return result;
@@ -126,13 +138,25 @@
             var result = await this.manager.RemoveClaimsAsync(user, claimsToRemove).ConfigureAwait(false);
             if (result.Succeeded)
             {
+                if (this.logger.IsEnabled(LogLevel.Trace))
+                {
+                    this.logger.LogTrace("Removing claims succeeded for user id={id}", user.Id);
+                }
+
                 return result;
             }
 
-            this.logger.LogWarning("Could not remove claims for user with id={id}", user.Id);
-            foreach (var error in result.Errors)
+            if (this.logger.IsEnabled(LogLevel.Warning))
             {
-                this.logger.LogDebug("Error: Code '{code}', Description: {description}", error.Code, error.Description);
+                this.logger.LogWarning("Could not remove claims for user with id={id}", user.Id);
+            }
+
+            if (this.logger.IsEnabled(LogLevel.Debug))
+            {
+                foreach (var error in result.Errors)
+                {
+                    this.logger.LogDebug("Error: Code '{code}', Description: {description}", error.Code, error.Description);
+                }
             }
 
             return result;
