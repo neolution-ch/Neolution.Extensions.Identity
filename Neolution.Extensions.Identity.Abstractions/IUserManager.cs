@@ -172,5 +172,28 @@
         /// The task object containing the results of the asynchronous lookup operation, the user, if any, associated with a normalized value of the specified email address.
         /// </returns>
         Task<TUser?> FindByEmailAsync(string email);
+
+        /// <summary>
+        /// Verifies the specified two factor authentication <paramref name="token" /> against the <paramref name="user"/>.
+        /// </summary>
+        /// <param name="user">The user the token is supposed to be for.</param>
+        /// <param name="tokenProvider">The provider which will verify the token.</param>
+        /// <param name="token">The token to verify.</param>
+        /// <returns>
+        /// The <see cref="Task"/> that represents result of the asynchronous operation, true if the token is valid,
+        /// otherwise false.
+        /// </returns>
+        Task<bool> VerifyTwoFactorTokenAsync(TUser user, string tokenProvider, string token);
+
+        /// <summary>
+        /// Gets a two factor authentication token for the specified <paramref name="user"/>.
+        /// </summary>
+        /// <param name="user">The user the token is for.</param>
+        /// <param name="tokenProvider">The provider which will generate the token.</param>
+        /// <returns>
+        /// The <see cref="Task"/> that represents result of the asynchronous operation, a two factor authentication token
+        /// for the user.
+        /// </returns>
+        Task<string> GenerateTwoFactorTokenAsync(TUser user, string tokenProvider);
     }
 }

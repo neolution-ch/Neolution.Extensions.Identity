@@ -167,5 +167,11 @@
 
         /// <inheritdoc />
         public async Task<TUser?> FindByEmailAsync(string email) => await this.manager.FindByEmailAsync(email).ConfigureAwait(false);
+
+        /// <inheritdoc />
+        public async Task<bool> VerifyTwoFactorTokenAsync(TUser user, string tokenProvider, string token) => await this.manager.VerifyTwoFactorTokenAsync(user, tokenProvider, token).ConfigureAwait(false);
+
+        /// <inheritdoc />
+        public async Task<string> GenerateTwoFactorTokenAsync(TUser user, string tokenProvider) => await this.manager.GenerateTwoFactorTokenAsync(user, tokenProvider).ConfigureAwait(false);
     }
 }
