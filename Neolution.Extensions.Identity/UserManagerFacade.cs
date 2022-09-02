@@ -173,5 +173,8 @@
 
         /// <inheritdoc />
         public async Task<string> GenerateTwoFactorTokenAsync(TUser user, string tokenProvider) => await this.manager.GenerateTwoFactorTokenAsync(user, tokenProvider).ConfigureAwait(false);
+
+        /// <inheritdoc />
+        public async Task<IdentityResult> UpdateSecurityStampAsync(TUser user) => await this.manager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
     }
 }

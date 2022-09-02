@@ -195,5 +195,18 @@
         /// for the user.
         /// </returns>
         Task<string> GenerateTwoFactorTokenAsync(TUser user, string tokenProvider);
+
+        /// <summary>
+        /// Regenerates the security stamp for the specified <paramref name="user" />.
+        /// </summary>
+        /// <param name="user">The user whose security stamp should be regenerated.</param>
+        /// <returns>
+        /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
+        /// of the operation.
+        /// </returns>
+        /// <remarks>
+        /// Regenerating a security stamp will sign out any saved login for the user.
+        /// </remarks>
+        Task<IdentityResult> UpdateSecurityStampAsync(TUser user);
     }
 }
