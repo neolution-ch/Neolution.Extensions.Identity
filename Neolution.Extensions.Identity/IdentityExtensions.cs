@@ -25,7 +25,8 @@
                 {
                     options.SignIn.RequireConfirmedAccount = false;
                 })
-                .AddEntityFrameworkStores<TDbContext>();
+                .AddEntityFrameworkStores<TDbContext>()
+                .AddTokenProvider<PhoneNumberTokenProvider<TUserAccount>>(TokenOptions.DefaultPhoneProvider);
 
             services.Configure<IdentityOptions>(options =>
             {
