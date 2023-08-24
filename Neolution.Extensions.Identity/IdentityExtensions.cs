@@ -46,7 +46,7 @@
         /// https://github.com/dotnet/aspnetcore/issues/4660
         /// https://mderriey.com/2019/06/23/where-are-my-jwt-claims/
         /// </remarks>
-        private static void RemoveLegacyClaimMappings()
+        public static void RemoveLegacyClaimMappings()
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();

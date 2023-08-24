@@ -73,7 +73,7 @@
             var user = await this.manager.FindByIdAsync(userId.ToString("D", CultureInfo.InvariantCulture)).ConfigureAwait(false);
             if (user != null)
             {
-                this.logger.LogTrace("Finding user by id={userId} succeeded", userId);
+                this.logger.LogDebug("Finding user by id={userId} succeeded", userId);
             }
             else
             {
@@ -89,7 +89,7 @@
             var user = await this.manager.FindByNameAsync(userName).ConfigureAwait(false);
             if (user != null)
             {
-                this.logger.LogTrace("Finding user by name={userName} succeeded", userName);
+                this.logger.LogDebug("Finding user by name={userName} succeeded", userName);
             }
             else
             {
@@ -105,7 +105,7 @@
             var result = await this.manager.CheckPasswordAsync(user, password).ConfigureAwait(false);
             if (result)
             {
-                this.logger.LogTrace("Checking password for user with id={userId} succeeded", user.Id);
+                this.logger.LogDebug("Checking password for user with id={userId} succeeded", user.Id);
             }
             else
             {
@@ -135,10 +135,10 @@
         public async Task<IdentityResult> AddClaimsAsync(TUser user, IEnumerable<Claim> claims)
         {
             var claimsToAdd = claims as List<Claim> ?? claims.ToList();
-            this.logger.LogTrace("Preparing to add claims for user id={id}", user.Id);
+            this.logger.LogDebug("Preparing to add claims for user id={id}", user.Id);
             foreach (var claim in claimsToAdd)
             {
-                this.logger.LogTrace("Adding claim '{type}' with value='{value}'", claim.Type, claim.Value);
+                this.logger.LogDebug("Adding claim '{type}' with value='{value}'", claim.Type, claim.Value);
             }
 
             var result = await this.manager.AddClaimsAsync(user, claimsToAdd).ConfigureAwait(false);
@@ -166,10 +166,10 @@
         public async Task<IdentityResult> RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims)
         {
             var claimsToRemove = claims as List<Claim> ?? claims.ToList();
-            this.logger.LogTrace("Preparing to remove claims for user id={id}", user.Id);
+            this.logger.LogDebug("Preparing to remove claims for user id={id}", user.Id);
             foreach (var claim in claimsToRemove)
             {
-                this.logger.LogTrace("Removing claim '{type}' with value='{value}'", claim.Type, claim.Value);
+                this.logger.LogDebug("Claim '{type}' with value='{value}' will be removed", claim.Type, claim.Value);
             }
 
             var result = await this.manager.RemoveClaimsAsync(user, claimsToRemove).ConfigureAwait(false);
@@ -196,7 +196,7 @@
             var user = await this.manager.FindByEmailAsync(email).ConfigureAwait(false);
             if (user != null)
             {
-                this.logger.LogTrace("Finding user by email={email} succeeded", email);
+                this.logger.LogDebug("Finding user by email={email} succeeded", email);
             }
             else
             {
@@ -212,7 +212,7 @@
             var result = await this.manager.VerifyTwoFactorTokenAsync(user, tokenProvider, token).ConfigureAwait(false);
             if (result)
             {
-                this.logger.LogTrace("Verifying two-factor token for user with id={userId} succeeded", user.Id);
+                this.logger.LogDebug("Verifying two-factor token for user with id={userId} succeeded", user.Id);
             }
             else
             {
@@ -257,12 +257,12 @@
         {
             if (result.Succeeded)
             {
-                this.logger.LogTrace("{message} succeeded", message);
+                this.logger.LogDebug("{message} succeeded", message);
             }
             else
             {
                 this.logger.LogWarning("{message} failed", message);
-                this.logger.LogTrace("IdentityResult: {result}", result);
+                this.logger.LogDebug("IdentityResult: {result}", result);
             }
         }
     }
