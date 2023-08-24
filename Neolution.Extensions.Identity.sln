@@ -7,6 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neolution.Extensions.Identi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neolution.Extensions.Identity.Abstractions", "Neolution.Extensions.Identity.Abstractions\Neolution.Extensions.Identity.Abstractions.csproj", "{59A98FC4-29B0-41B2-AA41-1B59449050DC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{69104D47-7585-43DE-9BE4-2FB00F7DA65F}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\cd-production.yml = .github\workflows\cd-production.yml
+		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.github\workflows\create-release.yml = .github\workflows\create-release.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
