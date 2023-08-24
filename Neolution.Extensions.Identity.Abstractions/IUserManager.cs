@@ -9,7 +9,7 @@
     /// Provides the APIs for managing user in a persistence store.
     /// </summary>
     /// <typeparam name="TUser">The type of the user account.</typeparam>
-    public interface IUserManager<TUser>
+    public interface IUserManager<TUser> : IDisposable
         where TUser : IdentityUser<Guid>
     {
         /// <summary>
