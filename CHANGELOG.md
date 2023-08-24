@@ -7,3 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added logging to all `UserManager` methods
+- Added BCrypt implementation of the IdentityPasswordHasher
+
+### Changed
+
+- Updated all dependencies to lates minor version
+- Changed Github workflows for new release management
+
+### Removed
+
+- Removed unnecessary dependencies from the Abstractions package
