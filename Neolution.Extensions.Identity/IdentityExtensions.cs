@@ -3,6 +3,7 @@
     using System.IdentityModel.Tokens.Jwt;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Options;
     using Neolution.Extensions.Identity;
     using Neolution.Extensions.Identity.Abstractions;
 
@@ -27,6 +28,8 @@
                 })
                 .AddEntityFrameworkStores<TDbContext>()
                 .AddTokenProvider<PhoneNumberTokenProvider<TUserAccount>>(TokenOptions.DefaultPhoneProvider);
+
+            services.AddSingleton<IValidateOptions<NeolutionIdentityOptions>, NeolutionIdentityOptionsValidator>();
 
             services.Configure<IdentityOptions>(options =>
             {

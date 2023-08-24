@@ -1,7 +1,7 @@
 ﻿namespace Neolution.Extensions.Identity
 {
     using Microsoft.AspNetCore.Identity;
-    using Neolution.Abstractions.Security;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// Password hashing implementation for the ASP.NET Core Identity framework
@@ -12,29 +12,29 @@
         where TUserAccount : IdentityUser<Guid>
     {
         /// <summary>
-        /// The password hasher
+        /// The work factor
         /// </summary>
-        private readonly IPasswordHasher passwordHasher;
+        private readonly int workFactor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityPasswordHasher{TUserAccount}"/> class.
         /// </summary>
-        /// <param name="passwordHasher">The password hasher.</param>
-        public IdentityPasswordHasher(IPasswordHasher passwordHasher)
+        /// <param name="options">The options.</param>
+        public IdentityPasswordHasher(IOptions<NeolutionIdentityOptions> options)
         {
-            this.passwordHasher = passwordHasher;
+            this.workFactor = options.Value.BCryptWorkFactor;
         }
 
         /// <inheritdoc />
         public string HashPassword(TUserAccount user, string password)
         {
-            return this.passwordHasher.CreateHash(password);
+            return BCrypt.Net.BCrypt.HashPassword(password, this.workFactor);
         }
 
         /// <inheritdoc />
         public PasswordVerificationResult VerifyHashedPassword(TUserAccount user, string hashedPassword, string providedPassword)
         {
-            if (this.passwordHasher.VerifyHash(hashedPassword, providedPassword))
+            if (BCrypt.Net.BCrypt.Verify(providedPassword, hashedPassword))
             {
                 return PasswordVerificationResult.Success;
             }
