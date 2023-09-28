@@ -2,6 +2,10 @@
 {
     using Microsoft.AspNetCore.Identity;
 
+    /// <summary>
+    /// Provides the APIs for user sign in.
+    /// </summary>
+    /// <typeparam name="TUser">The type encapsulating a user.</typeparam>
     public interface ISignInManager<TUser>
         where TUser : IdentityUser<Guid>
     {

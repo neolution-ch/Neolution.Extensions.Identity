@@ -57,6 +57,36 @@
         }
 
         /// <summary>
+        /// Converts a SignInResult to a SignInResponse.
+        /// </summary>
+        /// <param name="result">The SignInResult to convert.</param>
+        /// <returns>The corresponding SignInResponse.</returns>
+        private static SignInResponse ConvertToSignInResponse(SignInResult result)
+        {
+            if (result.Succeeded)
+            {
+                return SignInResponse.Success;
+            }
+
+            if (result.IsLockedOut)
+            {
+                return SignInResponse.Lockout;
+            }
+
+            if (result.IsNotAllowed)
+            {
+                return SignInResponse.NotAllowed;
+            }
+
+            if (result.RequiresTwoFactor)
+            {
+                return SignInResponse.TwoFactorRequired;
+            }
+
+            return SignInResponse.Failed;
+        }
+
+        /// <summary>
         /// Logs the result of a sign-in attempt.
         /// </summary>
         /// <param name="result">The result of the sign-in attempt.</param>
@@ -88,36 +118,6 @@
             }
 
             static string GetVariableName(Expression<Func<T>> expr) => ((MemberExpression)expr.Body).Member.Name;
-        }
-
-        /// <summary>
-        /// Converts a SignInResult to a SignInResponse.
-        /// </summary>
-        /// <param name="result">The SignInResult to convert.</param>
-        /// <returns>The corresponding SignInResponse.</returns>
-        private static SignInResponse ConvertToSignInResponse(SignInResult result)
-        {
-            if (result.Succeeded)
-            {
-                return SignInResponse.Success;
-            }
-
-            if (result.IsLockedOut)
-            {
-                return SignInResponse.Lockout;
-            }
-
-            if (result.IsNotAllowed)
-            {
-                return SignInResponse.NotAllowed;
-            }
-
-            if (result.RequiresTwoFactor)
-            {
-                return SignInResponse.TwoFactorRequired;
-            }
-
-            return SignInResponse.Failed;
         }
     }
 }
