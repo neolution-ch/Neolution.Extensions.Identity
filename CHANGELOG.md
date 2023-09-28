@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated all dependencies to lates minor version
 - Changed Github workflows for new release management
+- Use `Microsoft.NET.Sdk.Web` for the package
 
 ### Removed
 
