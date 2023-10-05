@@ -57,6 +57,34 @@
         }
 
         /// <summary>
+        /// Used to ensure that a user is allowed to sign in.
+        /// </summary>
+        /// <param name="user">The user</param>
+        /// <returns>Null if the user should be allowed to sign in, otherwise the SignInResponse why they should be denied.</returns>
+        public async Task<SignInResponse?> PreSignInCheckAsync(TUser user)
+        {
+            this.logger.LogTrace("Check if user meets formal account requirements to sign-in");
+            if (!await this.manager.CanSignInAsync(user).ConfigureAwait(false))
+            {
+                this.logger.LogDebug("User is not allowed to sign-in");
+                return ConvertToSignInResponse(SignInResult.NotAllowed);
+            }
+
+            if (this.manager.UserManager.SupportsUserLockout)
+            {
+                this.logger.LogDebug("Lockout is supported - ensure user is not locked out");
+                if (await this.manager.UserManager.IsLockedOutAsync(user).ConfigureAwait(false))
+                {
+                    this.manager.Logger.LogWarning(new EventId(3, "UserLockedOut"), "User is currently locked out.");
+                    return ConvertToSignInResponse(SignInResult.LockedOut);
+                }
+            }
+
+            this.logger.LogTrace("Pre-sign-in check completed with no errors");
+            return null;
+        }
+
+        /// <summary>
         /// Converts a SignInResult to a SignInResponse.
         /// </summary>
         /// <param name="result">The SignInResult to convert.</param>
