@@ -243,6 +243,34 @@
         }
 
         /// <inheritdoc />
+        public async Task<string?> GetAuthenticatorKeyAsync(TUser user)
+        {
+            this.logger.LogDebug("Get authenticator key for user with id={id}", user.Id);
+            var result = await this.manager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false);
+
+            if (result is null)
+            {
+                this.logger.LogWarning("Authenticator key for user with id={id} was null", user.Id);
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<string?> GeneratePasswordResetTokenAsync(TUser user)
+        {
+            this.logger.LogDebug("Generate password reset token for user with id={id}", user.Id);
+            var result = await this.manager.GeneratePasswordResetTokenAsync(user).ConfigureAwait(false);
+
+            if (result is null)
+            {
+                this.logger.LogWarning("Generated password reset token key for user with id={id} was null", user.Id);
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
             this.manager.Dispose();

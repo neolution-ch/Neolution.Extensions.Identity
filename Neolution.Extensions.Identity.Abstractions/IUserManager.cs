@@ -208,5 +208,21 @@
         /// Regenerating a security stamp will sign out any saved login for the user.
         /// </remarks>
         Task<IdentityResult> UpdateSecurityStampAsync(TUser user);
+
+        /// <summary>
+        /// Returns the authenticator key for the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns>The authenticator key</returns>
+        Task<string?> GetAuthenticatorKeyAsync(TUser user);
+
+        /// <summary>
+        /// Generates a password reset token for the specified <paramref name="user"/>, using
+        /// the configured password reset token provider.
+        /// </summary>
+        /// <param name="user">The user to generate a password reset token for.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous operation,
+        /// containing a password reset token for the specified <paramref name="user"/>.</returns>
+        Task<string?> GeneratePasswordResetTokenAsync(TUser user);
     }
 }

@@ -41,5 +41,12 @@
         /// <returns>The task object representing the asynchronous operation containing the <see name="SignInResponse"/>
         /// for the sign-in attempt.</returns>
         Task<SignInResponse> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent, bool bypassTwoFactor);
+
+        /// <summary>
+        /// Used to ensure that a user is allowed to sign in.
+        /// </summary>
+        /// <param name="user">The user</param>
+        /// <returns>Null if the user should be allowed to sign in, otherwise the SignInResponse why they should be denied.</returns>
+        Task<SignInResponse?> PreSignInCheckAsync(TUser user);
     }
 }

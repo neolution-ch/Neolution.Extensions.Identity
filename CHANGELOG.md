@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added logging to all `UserManager` methods
+- Added SignInManager facade and added logging to all methods
 - Added BCrypt implementation of the IdentityPasswordHasher
-- Added SignInManager facade
 
 ### Changed
 
