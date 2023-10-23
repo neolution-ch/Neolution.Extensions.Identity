@@ -13,6 +13,19 @@
         where TUser : IdentityUser<Guid>
     {
         /// <summary>
+        /// Gets a value indicating whether the backing user store supports two factor authentication.
+        /// </summary>
+        /// <value>
+        /// true if the backing user store supports user two factor authentication, otherwise false.
+        /// </value>
+        bool SupportsUserTwoFactor { get; }
+
+        /// <summary>
+        /// Gets the <see cref="IdentityOptions"/> used to configure Identity.
+        /// </summary>
+        public IdentityOptions Options { get; }
+
+        /// <summary>
         /// Creates the specified <paramref name="user"/> in the backing store with no password,
         /// as an asynchronous operation.
         /// </summary>
@@ -217,6 +230,13 @@
         Task<string?> GetAuthenticatorKeyAsync(TUser user);
 
         /// <summary>
+        /// Resets the authenticator key for the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns>Whether the user was successfully updated.</returns>
+        Task<IdentityResult> ResetAuthenticatorKeyAsync(TUser user);
+
+        /// <summary>
         /// Generates a password reset token for the specified <paramref name="user"/>, using
         /// the configured password reset token provider.
         /// </summary>
@@ -224,5 +244,51 @@
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation,
         /// containing a password reset token for the specified <paramref name="user"/>.</returns>
         Task<string?> GeneratePasswordResetTokenAsync(TUser user);
+
+        /// <summary>
+        /// Returns a flag indicating whether the specified <paramref name="user"/> has two factor authentication enabled or not,
+        /// as an asynchronous operation.
+        /// </summary>
+        /// <param name="user">The user whose two factor authentication enabled status should be retrieved.</param>
+        /// <returns>
+        /// The <see cref="Task"/> that represents the asynchronous operation, true if the specified <paramref name="user "/>
+        /// has two factor authentication enabled, otherwise false.
+        /// </returns>
+        Task<bool> GetTwoFactorEnabledAsync(TUser user);
+
+        /// <summary>
+        /// Gets a list of valid two factor token providers for the specified <paramref name="user"/>,
+        /// as an asynchronous operation.
+        /// </summary>
+        /// <param name="user">The user the whose two factor authentication providers will be returned.</param>
+        /// <returns>
+        /// The <see cref="Task"/> that represents result of the asynchronous operation, a list of two
+        /// factor authentication providers for the specified user.
+        /// </returns>
+        Task<IList<string>> GetValidTwoFactorProvidersAsync(TUser user);
+
+        /// <summary>
+        /// Sets a flag indicating whether the specified <paramref name="user"/> has two factor authentication enabled or not,
+        /// as an asynchronous operation.
+        /// </summary>
+        /// <param name="user">The user whose two factor authentication enabled status should be set.</param>
+        /// <param name="enabled">A flag indicating whether the specified <paramref name="user"/> has two factor authentication enabled.</param>
+        /// <returns>
+        /// The <see cref="Task"/> that represents the asynchronous operation, the <see cref="IdentityResult"/> of the operation
+        /// </returns>
+        Task<IdentityResult> SetTwoFactorEnabledAsync(TUser user, bool enabled);
+
+        /// <summary>
+        /// Resets the <paramref name="user"/>'s password to the specified <paramref name="newPassword"/> after
+        /// validating the given password reset <paramref name="token"/>.
+        /// </summary>
+        /// <param name="user">The user whose password should be reset.</param>
+        /// <param name="token">The password reset token to verify.</param>
+        /// <param name="newPassword">The new password to set if reset token verification succeeds.</param>
+        /// <returns>
+        /// The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
+        /// of the operation.
+        /// </returns>
+        Task<IdentityResult> ResetPasswordAsync(TUser user, string token, string newPassword);
     }
 }

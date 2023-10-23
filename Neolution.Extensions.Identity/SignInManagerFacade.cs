@@ -57,6 +57,15 @@
         }
 
         /// <inheritdoc />
+        public async Task<SignInResponse> CheckPasswordSignInAsync(TUser user, string password, bool lockoutOnFailure)
+        {
+            var result = await this.manager.CheckPasswordSignInAsync(user, password, lockoutOnFailure);
+            this.LogSignInResult(result, $"Attempts a password sign in for a user with id={user.Id}");
+            this.TraceLogParameter(lockoutOnFailure);
+            return ConvertToSignInResponse(result);
+        }
+
+        /// <inheritdoc />
         public async Task<SignInResponse?> PreSignInCheckAsync(TUser user)
         {
             this.logger.LogTrace("Check if user meets formal account requirements to sign-in");

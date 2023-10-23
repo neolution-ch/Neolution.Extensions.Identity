@@ -3,6 +3,7 @@
     using System.IdentityModel.Tokens.Jwt;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Options;
     using Neolution.Extensions.Identity;
     using Neolution.Extensions.Identity.Abstractions;
@@ -27,7 +28,12 @@
                     options.SignIn.RequireConfirmedAccount = false;
                 })
                 .AddEntityFrameworkStores<TDbContext>()
-                .AddTokenProvider<PhoneNumberTokenProvider<TUserAccount>>(TokenOptions.DefaultPhoneProvider);
+                .AddTokenProvider<DataProtectorTokenProvider<TUserAccount>>(TokenOptions.DefaultProvider)
+                .AddTokenProvider<EmailTokenProvider<TUserAccount>>(TokenOptions.DefaultEmailProvider)
+                .AddTokenProvider<PhoneNumberTokenProvider<TUserAccount>>(TokenOptions.DefaultPhoneProvider)
+                .AddTokenProvider<AuthenticatorTokenProvider<TUserAccount>>(TokenOptions.DefaultAuthenticatorProvider);
+
+            services.TryAddScoped<SignInManager<TUserAccount>>();
 
             services.AddSingleton<IValidateOptions<NeolutionIdentityOptions>, NeolutionIdentityOptionsValidator>();
 
@@ -38,6 +44,8 @@
 
             services.AddSingleton<IPasswordHasher<TUserAccount>, IdentityPasswordHasher<TUserAccount>>();
             services.AddScoped<IUserManager<TUserAccount>, UserManagerFacade<TUserAccount>>();
+            services.AddScoped<ISignInManager<TUserAccount>, SignInManagerFacade<TUserAccount>>();
+            services.AddScoped<IJwtSignInManager<TUserAccount>, JwtSignInManager<TUserAccount>>();
         }
 
         /// <summary>
