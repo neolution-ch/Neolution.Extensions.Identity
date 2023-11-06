@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Options;
     using Neolution.Extensions.Identity;
     using Neolution.Extensions.Identity.Abstractions;
+    using Neolution.Extensions.Identity.Abstractions.Options;
 
     /// <summary>
     /// Extension methods for services working with ASP.NET Core Identity.
@@ -35,6 +36,11 @@
 
             services.TryAddScoped<SignInManager<TUserAccount>>();
 
+            services.AddOptions<NeolutionIdentityOptions>()
+                .Configure<IConfiguration>((options, configuration) =>
+                {
+                    configuration.GetSection("NeolutionIdentity").Bind(options);
+                });
             services.AddSingleton<IValidateOptions<NeolutionIdentityOptions>, NeolutionIdentityOptionsValidator>();
 
             services.Configure<IdentityOptions>(options =>
@@ -45,7 +51,7 @@
             services.AddSingleton<IPasswordHasher<TUserAccount>, IdentityPasswordHasher<TUserAccount>>();
             services.AddScoped<IUserManager<TUserAccount>, UserManagerFacade<TUserAccount>>();
             services.AddScoped<ISignInManager<TUserAccount>, SignInManagerFacade<TUserAccount>>();
-            services.AddScoped<IJwtSignInManager<TUserAccount>, JwtSignInManager<TUserAccount>>();
+            services.AddScoped<ITokenSignInManager<TUserAccount>, TokenSignManager<TUserAccount>>();
         }
 
         /// <summary>

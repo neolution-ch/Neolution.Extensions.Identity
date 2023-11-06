@@ -1,9 +1,9 @@
-﻿namespace Neolution.Extensions.Identity
+﻿namespace Neolution.Extensions.Identity.Abstractions.Options
 {
     /// <summary>
-    /// Neolution Identity Options
+    /// The password hasher options.
     /// </summary>
-    public class NeolutionIdentityOptions
+    public class PasswordHasherOptions
     {
         /// <summary>
         /// Gets or sets the work factor for the BCrypt password hashing algorithm.

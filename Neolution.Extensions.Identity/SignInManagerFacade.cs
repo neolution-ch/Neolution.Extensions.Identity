@@ -34,29 +34,6 @@
         }
 
         /// <inheritdoc />
-        public async Task<SignInResponse> PasswordSignInAsync(TUser user, string password, bool isPersistent, bool lockoutOnFailure)
-        {
-            var result = await this.manager.PasswordSignInAsync(user, password, isPersistent, lockoutOnFailure);
-            this.LogSignInResult(result, $"Signing in user with id={user.Id} using provided password");
-            this.TraceLogParameter(isPersistent);
-            this.TraceLogParameter(lockoutOnFailure);
-            return ConvertToSignInResponse(result);
-        }
-
-        /// <inheritdoc />
-        public async Task<SignInResponse> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent) => await this.ExternalLoginSignInAsync(loginProvider, providerKey, isPersistent, bypassTwoFactor: false);
-
-        /// <inheritdoc />
-        public async Task<SignInResponse> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent, bool bypassTwoFactor)
-        {
-            var result = await this.manager.ExternalLoginSignInAsync(loginProvider, providerKey, isPersistent, bypassTwoFactor);
-            this.LogSignInResult(result, $"Signing in user via external login with providerKey={providerKey} using loginProvider={loginProvider}");
-            this.TraceLogParameter(isPersistent);
-            this.TraceLogParameter(bypassTwoFactor);
-            return ConvertToSignInResponse(result);
-        }
-
-        /// <inheritdoc />
         public async Task<SignInResponse> CheckPasswordSignInAsync(TUser user, string password, bool lockoutOnFailure)
         {
             var result = await this.manager.CheckPasswordSignInAsync(user, password, lockoutOnFailure);
@@ -68,24 +45,24 @@
         /// <inheritdoc />
         public async Task<SignInResponse?> PreSignInCheckAsync(TUser user)
         {
-            this.logger.LogTrace("Check if user meets formal account requirements to sign-in");
+            this.logger.LogTrace("Check if user with id={UserId} meets formal account requirements to sign-in", user.Id);
             if (!await this.manager.CanSignInAsync(user).ConfigureAwait(false))
             {
-                this.logger.LogDebug("User is not allowed to sign-in");
+                this.logger.LogDebug("User with id={UserId} is not allowed to sign-in", user.Id);
                 return ConvertToSignInResponse(SignInResult.NotAllowed);
             }
 
             if (this.manager.UserManager.SupportsUserLockout)
             {
-                this.logger.LogDebug("Lockout is supported - ensure user is not locked out");
+                this.logger.LogTrace("Lockout is supported, ensure user is not locked out");
                 if (await this.manager.UserManager.IsLockedOutAsync(user).ConfigureAwait(false))
                 {
-                    this.manager.Logger.LogWarning(new EventId(3, "UserLockedOut"), "User is currently locked out.");
+                    this.manager.Logger.LogWarning(new EventId(3, "UserLockedOut"), "User with id={UserId} is currently locked out.", user.Id);
                     return ConvertToSignInResponse(SignInResult.LockedOut);
                 }
             }
 
-            this.logger.LogTrace("Pre-sign-in check completed with no errors");
+            this.logger.LogTrace("User with id={UserId} meets all formal account requirements to sign-in", user.Id);
             return null;
         }
 

@@ -1,6 +1,7 @@
 ﻿namespace Neolution.Extensions.Identity
 {
     using Microsoft.Extensions.Options;
+    using Neolution.Extensions.Identity.Abstractions.Options;
 
     /// <inheritdoc />
     public class NeolutionIdentityOptionsValidator : IValidateOptions<NeolutionIdentityOptions>
@@ -17,7 +18,7 @@
         /// <inheritdoc />
         public ValidateOptionsResult Validate(string name, NeolutionIdentityOptions options)
         {
-            if (options.BCryptWorkFactor < MinWorkFactor)
+            if (options.PasswordHasher.BCryptWorkFactor < MinWorkFactor)
             {
                 return ValidateOptionsResult.Fail($"BCryptWorkFactor must be at least {MinWorkFactor}.");
             }
