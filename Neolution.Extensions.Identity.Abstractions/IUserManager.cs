@@ -13,14 +13,6 @@
         where TUser : IdentityUser<Guid>
     {
         /// <summary>
-        /// Gets a value indicating whether the backing user store supports two factor authentication.
-        /// </summary>
-        /// <value>
-        /// true if the backing user store supports user two factor authentication, otherwise false.
-        /// </value>
-        bool SupportsUserTwoFactor { get; }
-
-        /// <summary>
         /// Gets a value indicating whether the backing user store supports user lock-outs.
         /// </summary>
         /// <value>

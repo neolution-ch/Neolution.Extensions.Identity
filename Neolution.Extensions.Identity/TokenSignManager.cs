@@ -61,14 +61,12 @@
             var user = await this.userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                this.logger.LogInformation("Could not find user by email address '{Email}'", email);
                 return null;
             }
 
             var signInResponse = await this.signInManager.CheckPasswordSignInAsync(user, password, true);
             if (signInResponse.Succeeded)
             {
-                this.logger.LogTrace("Password sign-in for user email={User} succeeded", email);
                 return await this.CreateAccessTokenAsync(user, null);
             }
 
@@ -83,7 +81,6 @@
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                this.logger.LogInformation("Could not find user by ID '{UserId}'", userId);
                 return null;
             }
 
@@ -150,14 +147,12 @@
                 var user = await this.userManager.FindByEmailAsync(payload.Email);
                 if (user is null)
                 {
-                    this.logger.LogInformation("Could not find user by email address '{Email}'", payload.Email);
                     return null;
                 }
 
                 var error = await this.signInManager.PreSignInCheckAsync(user);
                 if (error != null)
                 {
-                    this.logger.LogInformation("Could not sign-in user with id={UserId} as he failed the pre-sign-in check", payload.Email);
                     return null;
                 }
 
@@ -194,6 +189,7 @@
         {
             if (!this.userManager.SupportsUserLockout)
             {
+                this.logger.LogTrace("User lockout is disabled, did not reset lockout for user id={UserId}", user.Id);
                 return IdentityResult.Success;
             }
 

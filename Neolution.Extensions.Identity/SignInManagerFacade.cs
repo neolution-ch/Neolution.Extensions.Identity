@@ -48,13 +48,13 @@
             this.logger.LogTrace("Check if user with id={UserId} meets formal account requirements to sign-in", user.Id);
             if (!await this.manager.CanSignInAsync(user).ConfigureAwait(false))
             {
-                this.logger.LogDebug("User with id={UserId} is not allowed to sign-in", user.Id);
+                this.logger.LogWarning("User with id={UserId} is not allowed to sign-in", user.Id);
                 return ConvertToSignInResponse(SignInResult.NotAllowed);
             }
 
             if (this.manager.UserManager.SupportsUserLockout)
             {
-                this.logger.LogTrace("Lockout is supported, ensure user is not locked out");
+                this.logger.LogTrace("User lockout is enabled, ensure user is not locked out");
                 if (await this.manager.UserManager.IsLockedOutAsync(user).ConfigureAwait(false))
                 {
                     this.manager.Logger.LogWarning(new EventId(3, "UserLockedOut"), "User with id={UserId} is currently locked out.", user.Id);
@@ -62,7 +62,7 @@
                 }
             }
 
-            this.logger.LogTrace("User with id={UserId} meets all formal account requirements to sign-in", user.Id);
+            this.logger.LogTrace("The user with id={UserId} is allowed to sign in", user.Id);
             return null;
         }
 
@@ -123,11 +123,11 @@
         {
             if (this.logger.IsEnabled(LogLevel.Trace))
             {
-                var paramName = GetVariableName(() => value);
-                this.logger.LogTrace("Parameter {Name}: {Value}", paramName, value);
+                var paramName = GetParameterName(() => value);
+                this.logger.LogTrace("Parameter: {Name}={Value}", paramName, value);
             }
 
-            static string GetVariableName(Expression<Func<T>> expr) => ((MemberExpression)expr.Body).Member.Name;
+            static string GetParameterName(Expression<Func<T>> expr) => ((MemberExpression)expr.Body).Member.Name;
         }
     }
 }

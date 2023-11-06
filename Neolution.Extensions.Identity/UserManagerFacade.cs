@@ -36,9 +36,6 @@
         }
 
         /// <inheritdoc />
-        public bool SupportsUserTwoFactor => this.manager.SupportsUserTwoFactor;
-
-        /// <inheritdoc />
         public bool SupportsUserLockout => this.manager.SupportsUserLockout;
 
         /// <inheritdoc />
