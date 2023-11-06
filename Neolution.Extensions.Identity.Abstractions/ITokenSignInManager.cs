@@ -14,8 +14,8 @@
         /// </summary>
         /// <param name="username">The user name.</param>
         /// <param name="password">The password.</param>
-        /// <returns>The user if signed-in; otherwise <c>null</c>.</returns>
-        Task<TUser?> PasswordSignInAsync(string username, string password);
+        /// <returns>The JWT if signed-in; otherwise <c>null</c>.</returns>
+        Task<JsonWebToken?> PasswordSignInAsync(string username, string password);
 
         /// <summary>
         /// Sign-in with Google ID token.
@@ -23,13 +23,6 @@
         /// <param name="token">The ID token.</param>
         /// <returns>The user if signed-in; otherwise <c>null</c>.</returns>
         Task<TUser?> GoogleSignInAsync(string token);
-
-        /// <summary>
-        /// Creates the access token.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <returns>The JWT if signed-in; otherwise <c>null</c>.</returns>
-        Task<JsonWebToken?> CreateAccessTokenAsync(TUser user);
 
         /// <summary>
         /// Creates the access token.

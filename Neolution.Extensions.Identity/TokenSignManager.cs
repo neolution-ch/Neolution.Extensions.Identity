@@ -55,7 +55,7 @@
         }
 
         /// <inheritdoc />
-        public async Task<TUser?> PasswordSignInAsync(string username, string password)
+        public async Task<JsonWebToken?> PasswordSignInAsync(string username, string password)
         {
             this.logger.LogTrace("Perform password sign-in for user={User}", username);
             var user = await this.userManager.FindByEmailAsync(username);
@@ -69,7 +69,7 @@
             if (signInResponse.Succeeded)
             {
                 this.logger.LogTrace("Password sign-in for user={User} succeeded", username);
-                return user;
+                return await this.CreateAccessTokenAsync(user, null);
             }
 
             this.logger.LogWarning("Password sign-in for user={User} failed", username);
@@ -122,18 +122,13 @@
         }
 
         /// <inheritdoc />
-        public async Task<JsonWebToken?> CreateAccessTokenAsync(TUser user)
-        {
-            return await this.CreateAccessTokenAsync(user, null);
-        }
-
-        /// <inheritdoc />
         public async Task<JsonWebToken?> CreateAccessTokenAsync(TUser user, string? authenticationMethod)
         {
-            this.logger.LogInformation("Create access token for user with id={UserId} and authentication method {AuthenticationMethod}", user.Id, authenticationMethod);
+            this.logger.LogInformation("Create access token for user with id={UserId}", user.Id);
             var claims = await this.userManager.GetClaimsAsync(user);
             if (authenticationMethod != null)
             {
+                this.logger.LogInformation("Set authentication method to {AuthenticationMethod}", authenticationMethod);
                 claims.Add(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
             }
 
