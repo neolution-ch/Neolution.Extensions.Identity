@@ -55,24 +55,24 @@
         }
 
         /// <inheritdoc />
-        public async Task<JsonWebToken?> PasswordSignInAsync(string username, string password)
+        public async Task<JsonWebToken?> PasswordSignInAsync(string email, string password)
         {
-            this.logger.LogTrace("Perform password sign-in for user={User}", username);
-            var user = await this.userManager.FindByEmailAsync(username);
+            this.logger.LogTrace("Perform password sign-in for user={User}", email);
+            var user = await this.userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                this.logger.LogInformation("Could not find user by email address '{Email}'", username);
+                this.logger.LogInformation("Could not find user by email address '{Email}'", email);
                 return null;
             }
 
             var signInResponse = await this.signInManager.CheckPasswordSignInAsync(user, password, true);
             if (signInResponse.Succeeded)
             {
-                this.logger.LogTrace("Password sign-in for user={User} succeeded", username);
+                this.logger.LogTrace("Password sign-in for user={User} succeeded", email);
                 return await this.CreateAccessTokenAsync(user, null);
             }
 
-            this.logger.LogWarning("Password sign-in for user={User} failed", username);
+            this.logger.LogWarning("Password sign-in for user={User} failed", email);
             return null;
         }
 

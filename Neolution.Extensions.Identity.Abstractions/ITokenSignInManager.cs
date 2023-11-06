@@ -12,10 +12,10 @@
         /// <summary>
         /// Sign-in with a password.
         /// </summary>
-        /// <param name="username">The user name.</param>
+        /// <param name="email">The user email address.</param>
         /// <param name="password">The password.</param>
         /// <returns>The JWT if signed-in; otherwise <c>null</c>.</returns>
-        Task<JsonWebToken?> PasswordSignInAsync(string username, string password);
+        Task<JsonWebToken?> PasswordSignInAsync(string email, string password);
 
         /// <summary>
         /// Sign-in with Google ID token.
