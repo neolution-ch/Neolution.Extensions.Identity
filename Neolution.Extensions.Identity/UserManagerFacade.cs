@@ -39,6 +39,9 @@
         public bool SupportsUserTwoFactor => this.manager.SupportsUserTwoFactor;
 
         /// <inheritdoc />
+        public bool SupportsUserLockout => this.manager.SupportsUserLockout;
+
+        /// <inheritdoc />
         public IdentityOptions Options => this.manager.Options;
 
         /// <inheritdoc />
@@ -329,6 +332,24 @@
             this.logger.LogDebug("Reset password for user with id={id}", user.Id);
             var result = await this.manager.ResetPasswordAsync(user, token, newPassword).ConfigureAwait(false);
             this.LogIdentityResult(result, $"Resetting the password for user with id={user.Id}");
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IdentityResult> ResetAccessFailedCountAsync(TUser user)
+        {
+            this.logger.LogDebug("Reset the access failed count for user with id={id}", user.Id);
+            var result = await this.manager.ResetAccessFailedCountAsync(user).ConfigureAwait(false);
+            this.LogIdentityResult(result, $"Resetting the access failed count for user with id={user.Id}");
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IdentityResult> AccessFailedAsync(TUser user)
+        {
+            this.logger.LogDebug("Increment the access failed count for user with id={id}", user.Id);
+            var result = await this.manager.AccessFailedAsync(user).ConfigureAwait(false);
+            this.LogIdentityResult(result, $"Incrementing the access failed count for user with id={user.Id}");
             return result;
         }
 

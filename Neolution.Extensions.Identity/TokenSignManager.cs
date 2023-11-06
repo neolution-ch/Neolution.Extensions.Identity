@@ -57,7 +57,7 @@
         /// <inheritdoc />
         public async Task<JsonWebToken?> PasswordSignInAsync(string email, string password)
         {
-            this.logger.LogTrace("Perform password sign-in for user={User}", email);
+            this.logger.LogTrace("Perform password sign-in for user email={User}", email);
             var user = await this.userManager.FindByEmailAsync(email);
             if (user == null)
             {
@@ -68,12 +68,62 @@
             var signInResponse = await this.signInManager.CheckPasswordSignInAsync(user, password, true);
             if (signInResponse.Succeeded)
             {
-                this.logger.LogTrace("Password sign-in for user={User} succeeded", email);
-                return await this.CreateAccessTokenAsync(user, null);
+                this.logger.LogTrace("Password sign-in for user email={User} succeeded", email);
+                return await this.CreateAccessTokenAsync(user, "pwd");
             }
 
-            this.logger.LogWarning("Password sign-in for user={User} failed", email);
+            this.logger.LogWarning("Password sign-in for user email={User} failed", email);
             return null;
+        }
+
+        /// <inheritdoc />
+        public async Task<JsonWebToken?> TwoFactorAuthenticatorSignInAsync(Guid userId, string code, string? authenticationMethod)
+        {
+            this.logger.LogTrace("Perform two factor sign-in for user id={UserId}", userId);
+            var user = await this.userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                this.logger.LogInformation("Could not find user by ID '{UserId}'", userId);
+                return null;
+            }
+
+            var error = await this.signInManager.PreSignInCheckAsync(user);
+            if (error != null)
+            {
+                return null;
+            }
+
+            var mfaTokenVerified = await this.userManager.VerifyTwoFactorTokenAsync(user, TokenOptions.DefaultAuthenticatorProvider, code);
+            if (!mfaTokenVerified)
+            {
+                return null;
+            }
+
+            var resetLockoutResult = await this.ResetLockoutWithResultAsync(user);
+            if (!resetLockoutResult.Succeeded)
+            {
+                // If the token is incorrect, record the failure which also may cause the user to be locked out
+                var incrementLockoutResult = await this.userManager.AccessFailedAsync(user) ?? IdentityResult.Success;
+                if (!incrementLockoutResult.Succeeded)
+                {
+                    // Return the same failure we do when resetting the lockout fails after a correct two factor code.
+                    // This is currently redundant, but it's here in case the code gets copied elsewhere.
+                    return null;
+                }
+
+                // ResetLockout got an unsuccessful result that could be caused by concurrency failures indicating an
+                // attacker could be trying to bypass the MaxFailedAccessAttempts limit. Return the same failure we do
+                // when failing to increment the lockout to avoid giving an attacker extra guesses at the two factor code.
+                return null;
+            }
+
+            var claims = new List<Claim>();
+            if (authenticationMethod != null)
+            {
+                claims.Add(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
+            }
+
+            return this.jwtGenerator.GenerateAccessToken(user, claims, "mfa");
         }
 
         /// <inheritdoc />
@@ -133,6 +183,21 @@
             }
 
             return this.jwtGenerator.GenerateAccessToken(user, claims);
+        }
+
+        /// <summary>
+        /// Resets the lockout of the specified user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns>The identity result.</returns>
+        private async Task<IdentityResult> ResetLockoutWithResultAsync(TUser user)
+        {
+            if (!this.userManager.SupportsUserLockout)
+            {
+                return IdentityResult.Success;
+            }
+
+            return await this.userManager.ResetAccessFailedCountAsync(user) ?? IdentityResult.Success;
         }
     }
 }

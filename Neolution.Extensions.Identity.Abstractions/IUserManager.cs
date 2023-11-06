@@ -21,6 +21,14 @@
         bool SupportsUserTwoFactor { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the backing user store supports user lock-outs.
+        /// </summary>
+        /// <value>
+        /// true if the backing user store supports user lock-outs, otherwise false.
+        /// </value>
+        bool SupportsUserLockout { get; }
+
+        /// <summary>
         /// Gets the <see cref="IdentityOptions"/> used to configure Identity.
         /// </summary>
         public IdentityOptions Options { get; }
@@ -290,5 +298,21 @@
         /// of the operation.
         /// </returns>
         Task<IdentityResult> ResetPasswordAsync(TUser user, string token, string newPassword);
+
+        /// <summary>
+        /// Resets the access failed count for the specified <paramref name="user"/>.
+        /// </summary>
+        /// <param name="user">The user whose failed access count should be reset.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/> of the operation.</returns>
+        Task<IdentityResult> ResetAccessFailedCountAsync(TUser user);
+
+        /// <summary>
+        /// Increments the access failed count for the user as an asynchronous operation.
+        /// If the failed access account is greater than or equal to the configured maximum number of attempts,
+        /// the user will be locked out for the configured lockout time span.
+        /// </summary>
+        /// <param name="user">The user whose failed access count to increment.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/> of the operation.</returns>
+        Task<IdentityResult> AccessFailedAsync(TUser user);
     }
 }
