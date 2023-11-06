@@ -8,7 +8,7 @@
         /// <summary>
         /// Gets or sets the Google options.
         /// </summary>
-        public GoogleOptions? Google { get; set; }
+        public GoogleOptions Google { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the password hasher options.

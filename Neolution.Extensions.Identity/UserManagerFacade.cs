@@ -39,9 +39,6 @@
         public bool SupportsUserLockout => this.manager.SupportsUserLockout;
 
         /// <inheritdoc />
-        public IdentityOptions Options => this.manager.Options;
-
-        /// <inheritdoc />
         public async Task<IdentityResult> CreateAsync(TUser user)
         {
             var result = await this.manager.CreateAsync(user).ConfigureAwait(false);

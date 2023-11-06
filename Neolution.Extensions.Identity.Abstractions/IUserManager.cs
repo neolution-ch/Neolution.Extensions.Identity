@@ -21,11 +21,6 @@
         bool SupportsUserLockout { get; }
 
         /// <summary>
-        /// Gets the <see cref="IdentityOptions"/> used to configure Identity.
-        /// </summary>
-        public IdentityOptions Options { get; }
-
-        /// <summary>
         /// Creates the specified <paramref name="user"/> in the backing store with no password,
         /// as an asynchronous operation.
         /// </summary>
