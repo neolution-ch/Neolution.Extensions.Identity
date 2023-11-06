@@ -69,7 +69,7 @@
             if (signInResponse.Succeeded)
             {
                 this.logger.LogTrace("Password sign-in for user email={User} succeeded", email);
-                return await this.CreateAccessTokenAsync(user, "pwd");
+                return await this.CreateAccessTokenAsync(user, null);
             }
 
             this.logger.LogWarning("Password sign-in for user email={User} failed", email);
