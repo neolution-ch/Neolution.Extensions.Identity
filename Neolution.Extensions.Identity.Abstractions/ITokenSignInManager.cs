@@ -36,7 +36,7 @@
         /// </summary>
         /// <param name="user">The user.</param>
         /// <param name="authenticationMethod">The authentication method.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>The JWT if signed-in; otherwise <c>null</c>.</returns>
         Task<JsonWebToken?> CreateAccessTokenAsync(TUser user, string? authenticationMethod);
     }
 }
