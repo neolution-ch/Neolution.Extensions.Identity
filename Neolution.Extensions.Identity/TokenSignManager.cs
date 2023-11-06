@@ -141,7 +141,7 @@
             try
             {
                 var payload = await GoogleJsonWebSignature.ValidateAsync(token, validationSettings); // Will throw an exception if validation fails.
-                this.logger.LogInformation("ID token is valid for user with email={Email}", payload.Email);
+                this.logger.LogInformation("Google ID token is valid for user with email={Email}", payload.Email);
 
                 // TODO: Think about different discovery options for external users
                 var user = await this.userManager.FindByEmailAsync(payload.Email);
@@ -156,7 +156,7 @@
                     return null;
                 }
 
-                this.logger.LogWarning("Password sign-in for user with id={UserId} failed", user.Id);
+                this.logger.LogWarning("Google ID token sign-in for user with id={UserId} failed", user.Id);
                 return user;
             }
             catch (Exception ex)
