@@ -36,6 +36,9 @@
         }
 
         /// <inheritdoc />
+        public bool SupportsUserLockout => this.manager.SupportsUserLockout;
+
+        /// <inheritdoc />
         public async Task<IdentityResult> CreateAsync(TUser user)
         {
             var result = await this.manager.CreateAsync(user).ConfigureAwait(false);
@@ -239,6 +242,108 @@
         {
             var result = await this.manager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
             this.LogIdentityResult(result, $"Updating security stamp for user with id={user.Id}");
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<string?> GetAuthenticatorKeyAsync(TUser user)
+        {
+            this.logger.LogDebug("Get authenticator key for user with id={id}", user.Id);
+            var result = await this.manager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false);
+
+            if (result is null)
+            {
+                this.logger.LogWarning("Authenticator key for user with id={id} was null", user.Id);
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IdentityResult> ResetAuthenticatorKeyAsync(TUser user)
+        {
+            this.logger.LogDebug("Reset the authenticator key for the user with id={id}", user.Id);
+            var result = await this.manager.ResetAuthenticatorKeyAsync(user).ConfigureAwait(false);
+            this.LogIdentityResult(result, $"Resetting the authenticator key for user with id={user.Id}");
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<string?> GeneratePasswordResetTokenAsync(TUser user)
+        {
+            this.logger.LogDebug("Generate password reset token for user with id={id}", user.Id);
+            var result = await this.manager.GeneratePasswordResetTokenAsync(user).ConfigureAwait(false);
+
+            if (result is null)
+            {
+                this.logger.LogWarning("Generated password reset token key for user with id={id} was null", user.Id);
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> GetTwoFactorEnabledAsync(TUser user)
+        {
+            this.logger.LogDebug("Check if user with id={Id} has two factor authentication enabled or not", user.Id);
+            var result = await this.manager.GetTwoFactorEnabledAsync(user);
+
+            this.logger.LogTrace("Two factor authentication is {TfaState} for user with id={Id}", result ? "enabled" : "disabled", user.Id);
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IList<string>> GetValidTwoFactorProvidersAsync(TUser user)
+        {
+            this.logger.LogDebug("Get a list of valid two factor token providers for user with id={Id}", user.Id);
+            var result = await this.manager.GetValidTwoFactorProvidersAsync(user);
+
+            if (result.Any())
+            {
+                this.logger.LogTrace("Valid two factor token providers found for user with id={Id}: {Providers}", user.Id, string.Join(", ", result));
+            }
+            else
+            {
+                this.logger.LogTrace("¨No valid two factor token providers found for user with id={Id}", user.Id);
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IdentityResult> SetTwoFactorEnabledAsync(TUser user, bool enabled)
+        {
+            this.logger.LogDebug("Set a flag indicating whether the user with id={id} has two factor authentication enabled or not", user.Id);
+            var result = await this.manager.SetTwoFactorEnabledAsync(user, enabled).ConfigureAwait(false);
+            this.LogIdentityResult(result, $"Setting the two factor authentication flag for user with id={user.Id}");
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IdentityResult> ResetPasswordAsync(TUser user, string token, string newPassword)
+        {
+            this.logger.LogDebug("Reset password for user with id={id}", user.Id);
+            var result = await this.manager.ResetPasswordAsync(user, token, newPassword).ConfigureAwait(false);
+            this.LogIdentityResult(result, $"Resetting the password for user with id={user.Id}");
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IdentityResult> ResetAccessFailedCountAsync(TUser user)
+        {
+            this.logger.LogDebug("Reset the access failed count for user with id={id}", user.Id);
+            var result = await this.manager.ResetAccessFailedCountAsync(user).ConfigureAwait(false);
+            this.LogIdentityResult(result, $"Resetting the access failed count for user with id={user.Id}");
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IdentityResult> AccessFailedAsync(TUser user)
+        {
+            this.logger.LogDebug("Increment the access failed count for user with id={id}", user.Id);
+            var result = await this.manager.AccessFailedAsync(user).ConfigureAwait(false);
+            this.LogIdentityResult(result, $"Incrementing the access failed count for user with id={user.Id}");
             return result;
         }
 

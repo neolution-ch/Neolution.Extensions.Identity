@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
+    using Neolution.Extensions.Identity.Abstractions.Options;
 
     /// <summary>
     /// Password hashing implementation for the ASP.NET Core Identity framework
@@ -22,7 +23,7 @@
         /// <param name="options">The options.</param>
         public IdentityPasswordHasher(IOptions<NeolutionIdentityOptions> options)
         {
-            this.workFactor = options.Value.BCryptWorkFactor;
+            this.workFactor = options.Value.PasswordHasher.BCryptWorkFactor;
         }
 
         /// <inheritdoc />
