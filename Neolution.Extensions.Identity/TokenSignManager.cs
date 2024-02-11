@@ -138,11 +138,11 @@
                 Audience = new List<string> { this.options.Google.ClientId },
             };
 
+            var payload = await GoogleJsonWebSignature.ValidateAsync(token, validationSettings); // Will throw an exception if validation fails.
+            this.logger.LogInformation("Google ID token is valid for user with email={Email}", payload.Email);
+
             try
             {
-                var payload = await GoogleJsonWebSignature.ValidateAsync(token, validationSettings); // Will throw an exception if validation fails.
-                this.logger.LogInformation("Google ID token is valid for user with email={Email}", payload.Email);
-
                 // TODO: Think about different discovery options for external users
                 var user = await this.userManager.FindByEmailAsync(payload.Email);
                 if (user is null)
@@ -156,12 +156,11 @@
                     return null;
                 }
 
-                this.logger.LogWarning("Google ID token sign-in for user with id={UserId} failed", user.Id);
                 return user;
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, "Could not sign in user with Google ID token");
+                this.logger.LogError(ex, "Could not sign in user despite valid Google ID token");
                 return null;
             }
         }
