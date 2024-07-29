@@ -105,11 +105,6 @@
         /// <inheritdoc />
         public async Task<bool> CheckPasswordAsync(TUser user, string password)
         {
-            if (user is null)
-            {
-                var hash = this.manager.PasswordHasher.HashPassword();
-            }
-
             var result = await this.manager.CheckPasswordAsync(user, password).ConfigureAwait(false);
             if (result)
             {

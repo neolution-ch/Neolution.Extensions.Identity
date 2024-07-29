@@ -35,8 +35,8 @@
         /// <param name="token">The ID token.</param>
         /// <returns>The user if signed-in; otherwise <c>null</c>.</returns>
         Task<TUser?> GoogleSignInAsync(string token);
-        
-        Task<TUser?> OpenIdConnectSignInAsync(string discoveryDocUrl, string token);
+
+        Task<TUser?> OpenIdConnectSignInAsync(OpenIdConnectToken token);
 
         /// <summary>
         /// Creates the access token.
