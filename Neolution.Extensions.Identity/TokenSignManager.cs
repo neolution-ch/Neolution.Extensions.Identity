@@ -1,9 +1,13 @@
 ﻿namespace Neolution.Extensions.Identity
 {
+    using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using Google.Apis.Auth;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Protocols;
+    using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+    using Microsoft.IdentityModel.Tokens;
     using Neolution.Extensions.Identity.Abstractions;
     using Neolution.Extensions.Identity.Abstractions.Options;
     using JsonWebToken = Neolution.Extensions.Identity.Abstractions.JsonWebToken;
@@ -161,6 +165,100 @@
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "Could not sign in user despite valid Google ID token");
+                return null;
+            }
+        }
+
+        public abstract class OpenIdConnectLoginInfo
+        {
+            public string IdToken { get; protected set; }
+
+            public abstract string ClientId { get; }
+
+            public abstract string DiscoveryDocumentUrl { get; }
+
+            public abstract string Issuer { get; }
+
+            protected OpenIdConnectLoginInfo(string idToken)
+            {
+                if (string.IsNullOrWhiteSpace(idToken))
+                {
+                    throw new ArgumentException("ID token must not be null or whitespace.", nameof(idToken));
+                }
+
+                this.IdToken = idToken;
+            }
+
+            public async Task<ClaimsPrincipal> ValidateTokenAsync()
+            {
+                var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(this.DiscoveryDocumentUrl, new OpenIdConnectConfigurationRetriever(), new HttpDocumentRetriever());
+                var discoveryDocument = await configurationManager.GetConfigurationAsync(CancellationToken.None);
+                var signingKeys = discoveryDocument.SigningKeys;
+
+                var validationParameters = new TokenValidationParameters
+                {
+                    ValidAudience = this.ClientId,
+                    ValidIssuer = this.Issuer,
+                    IssuerSigningKeys = signingKeys,
+
+                    // Additional validation parameters as necessary
+                };
+
+                return new JwtSecurityTokenHandler().ValidateToken(this.IdToken, validationParameters, out _);
+            }
+        }
+
+        public class GoogleLoginInfo : OpenIdConnectLoginInfo
+        {
+            public GoogleLoginInfo(string token)
+                : base(token)
+            {
+            }
+
+            public override string DiscoveryDocumentUrl => "https://accounts.google.com/.well-known/openid-configuration";
+
+            public override string ClientId => "";
+
+            public override string Issuer => "https://accounts.google.com";
+        }
+
+        public async Task<TUser?> OpenIdConnectSignInAsync(OpenIdConnectLoginInfo loginInfo)
+        {
+            this.logger.LogTrace("Perform sign-in with OIDC token");
+
+            try
+            {
+                var claimsPrincipal = await loginInfo.ValidateTokenAsync();
+
+                var email = claimsPrincipal.Claims.Where(x => x.Type == ClaimTypes.Email).Select(x => x.Value).FirstOrDefault();
+                if (email == null)
+                {
+                    this.logger.LogInformation("Could not find email claim in ID token");
+                    return null;
+                }
+
+                // Continue with the rest of your sign-in logic
+                this.logger.LogInformation("OIDC token is valid for user with email={Email}", email);
+
+                // TODO: Think about different discovery options for external users
+                var user = await this.userManager.FindByEmailAsync(email);
+                if (user is null)
+                {
+                    return null;
+                }
+
+                var error = await this.signInManager.PreSignInCheckAsync(user);
+                if (error != null)
+                {
+                    return null;
+                }
+
+                this.logger.LogWarning("OIDC token sign-in for user with id={UserId} failed", user.Id);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "Could not sign in user with OIDC token");
                 return null;
             }
         }
