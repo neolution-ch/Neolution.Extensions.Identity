@@ -348,3 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# File is not needed but probably generated because the library uses Microsoft.NET.Sdk.Web
+Neolution.Extensions.Identity/Properties/launchSettings.json
