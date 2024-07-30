@@ -1,4 +1,4 @@
-﻿namespace Neolution.Extensions.Identity.Abstractions
+namespace Neolution.Extensions.Identity.Abstractions
 {
     using Microsoft.AspNetCore.Identity;
     using Neolution.Extensions.Identity.Abstractions.OpenIdConnect;
@@ -23,7 +23,7 @@
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <param name="code">The two factor authentication code to validate.</param>
-        /// <param name="authenticationMethod">The authentication method.</param>
+        /// <param name="authenticationMethod">The authentication method, if external authentication was used.</param>
         /// <returns>
         /// The task object representing the asynchronous operation containing the <see name="SignInResult" />
         /// for the sign-in attempt.
