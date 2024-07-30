@@ -16,11 +16,11 @@
         private const int MinWorkFactor = 12;
 
         /// <inheritdoc />
-        public ValidateOptionsResult Validate(string name, NeolutionIdentityOptions options)
+        public ValidateOptionsResult Validate(string? name, NeolutionIdentityOptions options)
         {
             if (options.PasswordHasher.BCryptWorkFactor < MinWorkFactor)
             {
-                return ValidateOptionsResult.Fail($"BCryptWorkFactor must be at least {MinWorkFactor}.");
+                return ValidateOptionsResult.Fail($"For security reasons, BCryptWorkFactor must be at least {MinWorkFactor}.");
             }
 
             return ValidateOptionsResult.Success;

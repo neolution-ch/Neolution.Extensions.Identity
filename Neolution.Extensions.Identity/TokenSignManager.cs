@@ -9,10 +9,15 @@
     using Microsoft.IdentityModel.Protocols.OpenIdConnect;
     using Microsoft.IdentityModel.Tokens;
     using Neolution.Extensions.Identity.Abstractions;
+    using Neolution.Extensions.Identity.Abstractions.OpenIdConnect;
     using Neolution.Extensions.Identity.Abstractions.Options;
     using JsonWebToken = Neolution.Extensions.Identity.Abstractions.JsonWebToken;
 
     /// <inheritdoc />
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Major Code Smell",
+        "S1200:Classes should not be coupled to too many other classes (Single Responsibility Principle)",
+        Justification = "Currently tied to Google Auth library, will be more generic in future")]
     public sealed class TokenSignManager<TUser> : ITokenSignInManager<TUser>
         where TUser : IdentityUser<Guid>
     {
@@ -241,6 +246,11 @@
             return await this.userManager.ResetAccessFailedCountAsync(user) ?? IdentityResult.Success;
         }
 
+        /// <summary>
+        /// Validates the OpenID connect token. Throws an exception if the token is invalid.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns>The <see cref="ClaimsPrincipal"/>.</returns>
         private async Task<ClaimsPrincipal> ValidateOpenIdConnectInfoAsync(OpenIdConnectToken token)
         {
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(token.DiscoveryDocumentUrl, new OpenIdConnectConfigurationRetriever(), new HttpDocumentRetriever());
