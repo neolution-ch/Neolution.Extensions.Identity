@@ -1,4 +1,4 @@
-namespace Neolution.Extensions.Identity.Abstractions
+﻿namespace Neolution.Extensions.Identity.Abstractions
 {
     using Microsoft.AspNetCore.Identity;
     using Neolution.Extensions.Identity.Abstractions.OpenIdConnect;

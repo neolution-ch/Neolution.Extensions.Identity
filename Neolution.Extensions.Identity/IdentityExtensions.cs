@@ -34,6 +34,8 @@
                 .AddTokenProvider<PhoneNumberTokenProvider<TUserAccount>>(TokenOptions.DefaultPhoneProvider)
                 .AddTokenProvider<AuthenticatorTokenProvider<TUserAccount>>(TokenOptions.DefaultAuthenticatorProvider);
 
+            services.AddDataProtection();
+
             services.TryAddScoped<SignInManager<TUserAccount>>();
 
             services.AddOptions<NeolutionIdentityOptions>()
