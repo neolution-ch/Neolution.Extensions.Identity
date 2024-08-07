@@ -2,22 +2,15 @@
 {
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
-    using Google.Apis.Auth;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Protocols;
     using Microsoft.IdentityModel.Protocols.OpenIdConnect;
     using Microsoft.IdentityModel.Tokens;
     using Neolution.Extensions.Identity.Abstractions;
     using Neolution.Extensions.Identity.Abstractions.OpenIdConnect;
-    using Neolution.Extensions.Identity.Abstractions.Options;
     using JsonWebToken = Neolution.Extensions.Identity.Abstractions.JsonWebToken;
 
     /// <inheritdoc />
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Major Code Smell",
-        "S1200:Classes should not be coupled to too many other classes (Single Responsibility Principle)",
-        Justification = "Currently tied to Google Auth library, will be more generic in future")]
     public sealed class TokenSignManager<TUser> : ITokenSignInManager<TUser>
         where TUser : IdentityUser<Guid>
     {
@@ -42,25 +35,18 @@
         private readonly IJwtGenerator<TUser> jwtGenerator;
 
         /// <summary>
-        /// The Identity options
-        /// </summary>
-        private readonly NeolutionIdentityOptions options;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TokenSignManager{TUser}" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="userManager">The user manager.</param>
         /// <param name="signInManager">The sign in manager.</param>
         /// <param name="jwtGenerator">The JWT generator.</param>
-        /// <param name="options">The Identity options.</param>
-        public TokenSignManager(ILogger<TokenSignManager<TUser>> logger, IUserManager<TUser> userManager, ISignInManager<TUser> signInManager, IJwtGenerator<TUser> jwtGenerator, IOptions<NeolutionIdentityOptions> options)
+        public TokenSignManager(ILogger<TokenSignManager<TUser>> logger, IUserManager<TUser> userManager, ISignInManager<TUser> signInManager, IJwtGenerator<TUser> jwtGenerator)
         {
             this.logger = logger;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.jwtGenerator = jwtGenerator;
-            this.options = options.Value;
         }
 
         /// <inheritdoc />
@@ -133,48 +119,6 @@
         }
 
         /// <inheritdoc />
-        public async Task<TUser?> GoogleSignInAsync(string token)
-        {
-            this.logger.LogTrace("Perform sign-in with Google ID token");
-            if (string.IsNullOrWhiteSpace(this.options.Google?.ClientId))
-            {
-                this.logger.LogError("Google ClientId must be defined to enable ID token sign-in");
-                return null;
-            }
-
-            var validationSettings = new GoogleJsonWebSignature.ValidationSettings
-            {
-                Audience = new List<string> { this.options.Google.ClientId },
-            };
-
-            var payload = await GoogleJsonWebSignature.ValidateAsync(token, validationSettings); // Will throw an exception if validation fails.
-            this.logger.LogInformation("Google ID token is valid for user with email={Email}", payload.Email);
-
-            try
-            {
-                // TODO: Think about different discovery options for external users
-                var user = await this.userManager.FindByEmailAsync(payload.Email);
-                if (user is null)
-                {
-                    return null;
-                }
-
-                var error = await this.signInManager.PreSignInCheckAsync(user);
-                if (error != null)
-                {
-                    return null;
-                }
-
-                return user;
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, "Could not sign in user despite valid Google ID token");
-                return null;
-            }
-        }
-
-        /// <inheritdoc />
         public async Task<TUser?> OpenIdConnectSignInAsync(OpenIdConnectToken token)
         {
             this.logger.LogTrace("Perform sign-in with OIDC token");
@@ -206,7 +150,6 @@
                     return null;
                 }
 
-                this.logger.LogWarning("OIDC token sign-in for user with id={UserId} failed", user.Id);
                 return user;
             }
             catch (Exception ex)
@@ -253,14 +196,14 @@
         /// <returns>The <see cref="ClaimsPrincipal"/>.</returns>
         private async Task<ClaimsPrincipal> ValidateOpenIdConnectInfoAsync(OpenIdConnectToken token)
         {
-            var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(token.DiscoveryDocumentUrl, new OpenIdConnectConfigurationRetriever(), new HttpDocumentRetriever());
+            var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(token.ValidationOptions.DiscoveryDocumentUrl, new OpenIdConnectConfigurationRetriever(), new HttpDocumentRetriever());
             var discoveryDocument = await configurationManager.GetConfigurationAsync(CancellationToken.None);
             var signingKeys = discoveryDocument.SigningKeys;
 
             var validationParameters = new TokenValidationParameters
             {
-                ValidAudience = token.ClientId,
-                ValidIssuer = token.Issuer,
+                ValidAudience = token.ValidationOptions.ClientId,
+                ValidIssuer = token.ValidationOptions.Issuer,
                 IssuerSigningKeys = signingKeys,
 
                 // Additional validation parameters as necessary

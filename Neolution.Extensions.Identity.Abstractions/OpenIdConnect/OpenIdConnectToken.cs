@@ -3,40 +3,32 @@
     /// <summary>
     /// The OpenID Connect token.
     /// </summary>
-    public abstract class OpenIdConnectToken
+    public class OpenIdConnectToken
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OpenIdConnectToken"/> class.
+        /// Initializes a new instance of the <see cref="OpenIdConnectToken" /> class.
         /// </summary>
         /// <param name="idToken">The ID token.</param>
-        protected OpenIdConnectToken(string idToken)
+        /// <param name="options">The validation options.</param>
+        public OpenIdConnectToken(string idToken, OpenIdConnectTokenValidationOptions options)
         {
             if (string.IsNullOrWhiteSpace(idToken))
             {
-                throw new ArgumentException("ID token must not be null or whitespace.", nameof(idToken));
+                throw new ArgumentException("ID token must not be null or empty", nameof(idToken));
             }
 
+            this.ValidationOptions = options;
             this.IdToken = idToken;
         }
 
         /// <summary>
-        /// Gets or sets the ID token.
+        /// Gets the validation options.
         /// </summary>
-        public string IdToken { get; protected set; }
+        public OpenIdConnectTokenValidationOptions ValidationOptions { get; }
 
         /// <summary>
-        /// Gets the client identifier.
+        /// Gets the ID token.
         /// </summary>
-        public abstract string ClientId { get; }
-
-        /// <summary>
-        /// Gets the discovery document URL.
-        /// </summary>
-        public abstract string DiscoveryDocumentUrl { get; }
-
-        /// <summary>
-        /// Gets the issuer.
-        /// </summary>
-        public abstract string Issuer { get; }
+        public string IdToken { get; }
     }
 }

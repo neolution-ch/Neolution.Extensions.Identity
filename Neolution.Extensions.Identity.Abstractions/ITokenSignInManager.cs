@@ -31,13 +31,6 @@
         Task<JsonWebToken?> TwoFactorAuthenticatorSignInAsync(Guid userId, string code, string? authenticationMethod);
 
         /// <summary>
-        /// Sign-in with Google ID token.
-        /// </summary>
-        /// <param name="token">The ID token.</param>
-        /// <returns>The user if signed in; otherwise <c>null</c>.</returns>
-        Task<TUser?> GoogleSignInAsync(string token);
-
-        /// <summary>
         /// Sign-in with generic OpenId Connect token.
         /// </summary>
         /// <param name="token">The token.</param>

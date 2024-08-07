@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Options;
     using Neolution.Extensions.Identity;
     using Neolution.Extensions.Identity.Abstractions;
+    using Neolution.Extensions.Identity.Abstractions.OpenIdConnect;
     using Neolution.Extensions.Identity.Abstractions.Options;
 
     /// <summary>
@@ -54,6 +55,7 @@
             services.AddScoped<IUserManager<TUserAccount>, UserManagerFacade<TUserAccount>>();
             services.AddScoped<ISignInManager<TUserAccount>, SignInManagerFacade<TUserAccount>>();
             services.AddScoped<ITokenSignInManager<TUserAccount>, TokenSignManager<TUserAccount>>();
+            services.AddSingleton<IOpenIdConnectTokenFactory, OpenIdConnectTokenFactory>();
         }
 
         /// <summary>
