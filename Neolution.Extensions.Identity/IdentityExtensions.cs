@@ -3,9 +3,12 @@
     using System.IdentityModel.Tokens.Jwt;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Options;
     using Neolution.Extensions.Identity;
     using Neolution.Extensions.Identity.Abstractions;
+    using Neolution.Extensions.Identity.Abstractions.OpenIdConnect;
+    using Neolution.Extensions.Identity.Abstractions.Options;
 
     /// <summary>
     /// Extension methods for services working with ASP.NET Core Identity.
@@ -27,8 +30,20 @@
                     options.SignIn.RequireConfirmedAccount = false;
                 })
                 .AddEntityFrameworkStores<TDbContext>()
-                .AddTokenProvider<PhoneNumberTokenProvider<TUserAccount>>(TokenOptions.DefaultPhoneProvider);
+                .AddTokenProvider<DataProtectorTokenProvider<TUserAccount>>(TokenOptions.DefaultProvider)
+                .AddTokenProvider<EmailTokenProvider<TUserAccount>>(TokenOptions.DefaultEmailProvider)
+                .AddTokenProvider<PhoneNumberTokenProvider<TUserAccount>>(TokenOptions.DefaultPhoneProvider)
+                .AddTokenProvider<AuthenticatorTokenProvider<TUserAccount>>(TokenOptions.DefaultAuthenticatorProvider);
 
+            services.AddDataProtection();
+
+            services.TryAddScoped<SignInManager<TUserAccount>>();
+
+            services.AddOptions<NeolutionIdentityOptions>()
+                .Configure<IConfiguration>((options, configuration) =>
+                {
+                    configuration.GetSection("NeolutionIdentity").Bind(options);
+                });
             services.AddSingleton<IValidateOptions<NeolutionIdentityOptions>, NeolutionIdentityOptionsValidator>();
 
             services.Configure<IdentityOptions>(options =>
@@ -38,6 +53,9 @@
 
             services.AddSingleton<IPasswordHasher<TUserAccount>, IdentityPasswordHasher<TUserAccount>>();
             services.AddScoped<IUserManager<TUserAccount>, UserManagerFacade<TUserAccount>>();
+            services.AddScoped<ISignInManager<TUserAccount>, SignInManagerFacade<TUserAccount>>();
+            services.AddScoped<ITokenSignInManager<TUserAccount>, TokenSignManager<TUserAccount>>();
+            services.AddSingleton<IOpenIdConnectTokenFactory, OpenIdConnectTokenFactory>();
         }
 
         /// <summary>
