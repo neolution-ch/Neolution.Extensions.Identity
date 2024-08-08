@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2024-08-08
+
 ### Added
 
 - Added logging to all `UserManager` methods
@@ -24,3 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use `Microsoft.NET.Sdk.Web` for the main package
 - Replaced `JsonWebToken` with custom implementation which uses `DateTimeOffset` for the expiration date
 - Replaced Google-specific OpenID Connect implementation with a generic one that can be extended in the future
+
+[unreleased]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.2.0-beta.2...0.2.0
