@@ -79,8 +79,8 @@
                 return null;
             }
 
-            var error = await this.signInManager.PreSignInCheckAsync(user);
-            if (error != null)
+            var preSignInResult = await this.signInManager.PreSignInCheckAsync(user);
+            if (preSignInResult != PreSignInResponse.Success)
             {
                 return null;
             }
@@ -144,8 +144,8 @@
                     return null;
                 }
 
-                var error = await this.signInManager.PreSignInCheckAsync(user);
-                if (error != null)
+                var preSignInResult = await this.signInManager.PreSignInCheckAsync(user);
+                if (preSignInResult != PreSignInResponse.Success)
                 {
                     return null;
                 }
