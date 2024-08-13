@@ -43,13 +43,13 @@
         }
 
         /// <inheritdoc />
-        public async Task<SignInResponse?> PreSignInCheckAsync(TUser user)
+        public async Task<PreSignInResponse> PreSignInCheckAsync(TUser user)
         {
             this.logger.LogTrace("Check if user with id={UserId} meets formal account requirements to sign-in", user.Id);
             if (!await this.manager.CanSignInAsync(user).ConfigureAwait(false))
             {
                 this.logger.LogWarning("User with id={UserId} is not allowed to sign-in", user.Id);
-                return ConvertToSignInResponse(SignInResult.NotAllowed);
+                return PreSignInResponse.NotAllowed;
             }
 
             if (this.manager.UserManager.SupportsUserLockout)
@@ -58,12 +58,12 @@
                 if (await this.manager.UserManager.IsLockedOutAsync(user).ConfigureAwait(false))
                 {
                     this.manager.Logger.LogWarning(new EventId(3, "UserLockedOut"), "User with id={UserId} is currently locked out.", user.Id);
-                    return ConvertToSignInResponse(SignInResult.LockedOut);
+                    return PreSignInResponse.Lockout;
                 }
             }
 
             this.logger.LogTrace("The user with id={UserId} is allowed to sign in", user.Id);
-            return null;
+            return PreSignInResponse.Success;
         }
 
         /// <summary>

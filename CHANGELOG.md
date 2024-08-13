@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Improved the return type of the `PreSignInCheck` method in the `SignInManager` facade. It now returns a `PreSignInRespone` instead of a `SignInResponse` to better reflect the purpose of the method.
+
 ## [0.2.0] - 2024-08-08
 
 ### Added
