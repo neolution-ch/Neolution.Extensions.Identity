@@ -80,7 +80,7 @@
             }
 
             var preSignInRespone = await this.signInManager.PreSignInCheckAsync(user);
-            if (preSignInRespone != PreSignInResponse.Success)
+            if (!preSignInRespone.Succeeded)
             {
                 return null;
             }
@@ -145,7 +145,7 @@
                 }
 
                 var preSignInRespone = await this.signInManager.PreSignInCheckAsync(user);
-                if (preSignInRespone != PreSignInResponse.Success)
+                if (!preSignInRespone.Succeeded)
                 {
                     return null;
                 }
