@@ -115,7 +115,7 @@
                 claims.Add(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
             }
 
-            return this.jwtGenerator.GenerateAccessToken(user, claims, "mfa");
+            return await this.CreateAccessTokenAsync(user, authenticationMethod);
         }
 
         /// <inheritdoc />

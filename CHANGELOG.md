@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed a bug in the `TwoFactorAuthenticatorSignInAsync` method of the `SignInManager` facade where the claims of the user were not added to the token.
+
 ## [0.3.1] - 2024-08-13
 
 ### Fixed
