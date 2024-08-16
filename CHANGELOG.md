@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Using `ITokenSignInManager` now requires developers to be explicit about both the AMR value (JWT) and the Authentication Method (Identity).
+
 ## [0.3.2] - 2024-08-14
 
 ### Fixed
