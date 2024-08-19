@@ -62,7 +62,7 @@
             var signInResponse = await this.signInManager.CheckPasswordSignInAsync(user, password, true);
             if (signInResponse.Succeeded)
             {
-                return await this.CreateAccessTokenAsync(user, null);
+                return await this.CreateAccessTokenAsync(user, "pwd", "identity-store");
             }
 
             this.logger.LogWarning("Password sign-in for user email={User} failed", email);
@@ -70,7 +70,7 @@
         }
 
         /// <inheritdoc />
-        public async Task<JsonWebToken?> TwoFactorAuthenticatorSignInAsync(Guid userId, string code, string? authenticationMethod)
+        public async Task<JsonWebToken?> TwoFactorAuthenticatorSignInAsync(Guid userId, string code, string authenticationMethod)
         {
             this.logger.LogTrace("Perform two factor sign-in for user id={UserId}", userId);
             var user = await this.userManager.FindByIdAsync(userId);
@@ -109,13 +109,7 @@
                 return null;
             }
 
-            var claims = new List<Claim>();
-            if (authenticationMethod != null)
-            {
-                claims.Add(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
-            }
-
-            return await this.CreateAccessTokenAsync(user, authenticationMethod);
+            return await this.CreateAccessTokenAsync(user, "mfa", authenticationMethod);
         }
 
         /// <inheritdoc />
@@ -160,7 +154,7 @@
         }
 
         /// <inheritdoc />
-        public async Task<JsonWebToken?> CreateAccessTokenAsync(TUser user, string? authenticationMethod)
+        public async Task<JsonWebToken?> CreateAccessTokenAsync(TUser user, string amr, string authenticationMethod)
         {
             this.logger.LogInformation("Create access token for user with id={UserId}", user.Id);
             var claims = await this.userManager.GetClaimsAsync(user);
@@ -170,7 +164,7 @@
                 claims.Add(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
             }
 
-            return this.jwtGenerator.GenerateAccessToken(user, claims);
+            return this.jwtGenerator.GenerateAccessToken(user, claims, amr);
         }
 
         /// <summary>
