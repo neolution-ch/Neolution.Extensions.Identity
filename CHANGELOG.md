@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2024-08-19
+
 ### Changed
 
 - Using `ITokenSignInManager` now requires developers to be explicit about both the AMR value (JWT) and the Authentication Method (Identity).
@@ -49,7 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced `JsonWebToken` with custom implementation which uses `DateTimeOffset` for the expiration date
 - Replaced Google-specific OpenID Connect implementation with a generic one that can be extended in the future
 
-[unreleased]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.3.2...HEAD
+[unreleased]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.4.0...HEAD
+[0.4.0]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.3.2...0.4.0
 [0.3.2]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.2.0...0.3.0
