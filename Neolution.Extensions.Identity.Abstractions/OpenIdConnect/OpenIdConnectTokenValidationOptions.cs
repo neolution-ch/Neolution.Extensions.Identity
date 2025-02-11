@@ -19,5 +19,10 @@
         /// Gets or sets the issuer.
         /// </summary>
         public required string Issuer { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to validate the issuer.
+        /// </summary>
+        public bool ValidateIssuer { get; set; } = true;
     }
 }

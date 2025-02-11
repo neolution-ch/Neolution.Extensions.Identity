@@ -199,6 +199,7 @@
                 ValidAudience = token.ValidationOptions.ClientId,
                 ValidIssuer = token.ValidationOptions.Issuer,
                 IssuerSigningKeys = signingKeys,
+                ValidateIssuer = token.ValidationOptions.ValidateIssuer,
 
                 // Additional validation parameters as necessary
             };
