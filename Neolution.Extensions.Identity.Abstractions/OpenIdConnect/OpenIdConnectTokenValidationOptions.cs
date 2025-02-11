@@ -18,7 +18,7 @@
         /// <summary>
         /// Gets or sets the issuer.
         /// </summary>
-        public required string Issuer { get; set; }
+        public string Issuer { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether to validate the issuer.
