@@ -52,6 +52,7 @@
         /// <inheritdoc />
         public async Task<JsonWebToken?> PasswordSignInAsync(TUser user, string password)
         {
+            this.logger.LogTrace("Perform password sign-in for user email={Email}/username={Username}", user.Email, user.UserName);
             var signInResponse = await this.signInManager.CheckPasswordSignInAsync(user, password, true);
             if (signInResponse.Succeeded)
             {
