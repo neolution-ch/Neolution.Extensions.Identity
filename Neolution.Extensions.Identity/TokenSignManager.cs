@@ -50,6 +50,19 @@
         }
 
         /// <inheritdoc />
+        public async Task<JsonWebToken?> PasswordSignInAsync(TUser user, string password)
+        {
+            var signInResponse = await this.signInManager.CheckPasswordSignInAsync(user, password, true);
+            if (signInResponse.Succeeded)
+            {
+                return await this.CreateAccessTokenAsync(user, "pwd", "identity-store");
+            }
+
+            this.logger.LogWarning("Password sign-in for user email={Email}/username={Username} failed", user.Email, user.UserName);
+            return null;
+        }
+
+        /// <inheritdoc />
         public async Task<JsonWebToken?> PasswordSignInAsync(string email, string password)
         {
             this.logger.LogTrace("Perform password sign-in for user email={User}", email);
@@ -59,14 +72,7 @@
                 return null;
             }
 
-            var signInResponse = await this.signInManager.CheckPasswordSignInAsync(user, password, true);
-            if (signInResponse.Succeeded)
-            {
-                return await this.CreateAccessTokenAsync(user, "pwd", "identity-store");
-            }
-
-            this.logger.LogWarning("Password sign-in for user email={User} failed", email);
-            return null;
+            return await this.PasswordSignInAsync(user, password);
         }
 
         /// <inheritdoc />

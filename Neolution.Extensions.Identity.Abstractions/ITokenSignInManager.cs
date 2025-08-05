@@ -11,6 +11,14 @@
         where TUser : IdentityUser<Guid>
     {
         /// <summary>
+        /// Passwords the sign in asynchronous.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>The JWT if signed in; otherwise <c>null</c>.</returns>
+        Task<JsonWebToken?> PasswordSignInAsync(TUser user, string password);
+
+        /// <summary>
         /// Sign-in with a password.
         /// </summary>
         /// <param name="email">The user email address.</param>
