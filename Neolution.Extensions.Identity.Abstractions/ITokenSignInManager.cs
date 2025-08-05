@@ -11,7 +11,7 @@
         where TUser : IdentityUser<Guid>
     {
         /// <summary>
-        /// Passwords the sign in asynchronous.
+        /// Signs in a user with their password asynchronously.
         /// </summary>
         /// <param name="user">The user.</param>
         /// <param name="password">The password.</param>
