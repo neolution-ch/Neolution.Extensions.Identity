@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-06
+
 ### Changed
 
 - Upgraded target framework to .NET 10.0
@@ -68,7 +70,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced `JsonWebToken` with custom implementation which uses `DateTimeOffset` for the expiration date
 - Replaced Google-specific OpenID Connect implementation with a generic one that can be extended in the future
 
-[unreleased]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.6.0...1.0.0
 [0.6.0]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/neolution-ch/Neolution.Extensions.Identity/compare/0.3.2...0.4.0
